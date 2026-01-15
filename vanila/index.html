@@ -8,6 +8,7 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="style.css ">
     <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
     
     <!-- Tailwind CSS -->
@@ -77,80 +78,6 @@
         }
     </script>
 
-    <style>
-        :root {
-            --background: 220 40% 10%; /* Deeper Navy */
-            --foreground: 215 20% 90%;
-            
-            --card: 220 30% 15%;
-            --card-foreground: 215 20% 90%;
-            
-            --popover: 220 40% 8%;
-            --popover-foreground: 215 20% 90%;
-            
-            --primary: 210 100% 60%; /* Vibrant Blue */
-            --primary-foreground: 210 100% 10%;
-            
-            --secondary: 220 20% 20%;
-            --secondary-foreground: 210 40% 98%;
-            
-            --muted: 220 15% 25%;
-            --muted-foreground: 215 15% 65%;
-            
-            --accent: 45 90% 55%; /* Gold */
-            --accent-foreground: 45 100% 10%;
-
-            --destructive: 0 70% 55%;
-            --destructive-foreground: 0 0% 100%;
-            
-            --border: 220 30% 25%;
-            --input: 220 30% 25%;
-            --ring: 210 100% 70%;
-            
-            --radius: 0.5rem;
-        }
-
-        /* Estilos para quando encontrar um chefe */
-        .boss-battle {
-            --background: 0 100% 8%; /* Deep, dark red */
-            --primary: 0 70% 55%; /* Agressive Red */
-            --accent: 25 95% 55%; /* Intense Orange */
-            --ring: 0 70% 65%;
-        }
-
-        body {
-            background-color: hsl(var(--background));
-            color: hsl(var(--foreground));
-        }
-
-        /* Custom Scrollbar for inner areas */
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: hsl(var(--muted));
-            border-radius: 3px;
-        }
-
-        /* Tab Animations */
-        .tab-content {
-            display: none;
-            animation: fadeIn 0.3s ease-in-out;
-        }
-        .tab-content.active {
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-    </style>
 </head>
 <body class="font-body antialiased min-h-screen flex flex-col">
 
