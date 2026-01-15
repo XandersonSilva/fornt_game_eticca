@@ -1,0 +1,77 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 220 40% 10%; /* Deeper Navy */
+    --foreground: 215 20% 90%;
+    
+    --card: 220 30% 15%;
+    --card-foreground: 215 20% 90%;
+    
+    --popover: 220 40% 8%;
+    --popover-foreground: 215 20% 90%;
+    
+    --primary: 210 100% 60%; /* Vibrant Blue */
+    --primary-foreground: 210 100% 10%;
+    
+    --secondary: 220 20% 20%;
+    --secondary-foreground: 210 40% 98%;
+    
+    --muted: 220 15% 25%;
+    --muted-foreground: 215 15% 65%;
+    
+    --accent: 45 90% 55%; /* Gold */
+    --accent-foreground: 45 100% 10%;
+
+    --destructive: 0 70% 55%;
+    --destructive-foreground: 0 0% 100%;
+    
+    --border: 220 30% 25%;
+    --input: 220 30% 25%;
+    --ring: 210 100% 70%;
+    
+    --radius: 0.5rem;
+    --transition-speed: 1500ms;
+  }
+
+  .dark {
+    --background: 220 40% 10%;
+    --foreground: 215 20% 90%;
+    --card: 220 30% 15%;
+    --card-foreground: 215 20% 90%;
+    --popover: 220 40% 8%;
+    --popover-foreground: 215 20% 90%;
+    --primary: 210 100% 60%;
+    --primary-foreground: 210 100% 10%;
+    --secondary: 220 20% 20%;
+    --secondary-foreground: 210 40% 98%;
+    --muted: 220 15% 25%;
+    --muted-foreground: 215 15% 65%;
+    --accent: 45 90% 55%;
+    --accent-foreground: 45 100% 10%;
+    --destructive: 0 70% 55%;
+    --destructive-foreground: 0 0% 100%;
+    --border: 220 30% 25%;
+    --input: 220 30% 25%;
+    --ring: 210 100% 70%;
+  }
+
+  /* Estilos para quando encontrar um chefe */
+  .boss-battle {
+    --background: 0 100% 8%; /* Deep, dark red */
+    --primary: 0 70% 55%; /* Agressive Red */
+    --accent: 25 95% 55%; /* Intense Orange */
+    --ring: 0 70% 65%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
+  }
+}

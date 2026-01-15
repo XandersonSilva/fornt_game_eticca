@@ -1,0 +1,87 @@
+import Image from 'next/image';
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import type { Player } from "@/lib/types";
+import { roleDetails } from "@/lib/game-data";
+import { PlaceHolderImages } from '@/lib/placeholder-images';
+import { cn } from "@/lib/utils";
+import { Crown, Coins, Eye } from "lucide-react";
+import { ScrollArea } from '../ui/scroll-area';
+
+type PlayerDashboardProps = {
+  players: Player[];
+  currentPlayerId?: string;
+};
+
+export default function PlayerDashboard({ players, currentPlayerId }: PlayerDashboardProps) {
+  return (
+    // Removido o Card e CardHeader para ser usado dentro de um Popover
+    <>
+      <CardHeader className="p-2 pt-0">
+        <CardTitle className="font-headline text-lg">Gabinete</CardTitle>
+      </CardHeader>
+      <CardContent className="p-0">
+        <ScrollArea className="h-[200px] p-2 pt-0">
+        <div className="space-y-2">
+          {players.map((player) => {
+            if (!player || !player.nickname) {
+              return null;
+            }
+
+            const details = roleDetails[player.character_role];
+            const avatarImage = PlaceHolderImages.find(p => p.id === player.avatar);
+            const isCurrentPlayer = player.id === currentPlayerId;
+            const isObserver = player.character_role === 'Observador';
+
+            return (
+              <TooltipProvider key={player.id}>
+                <Tooltip>
+                  <TooltipTrigger asChild>
+                    <div className={cn(
+                      "flex items-center space-x-3 p-2 rounded-lg border transition-all",
+                      isCurrentPlayer ? "bg-primary/20 border-primary shadow-md border-2" : "bg-card/50",
+                      isObserver && "opacity-70"
+                    )}>
+                      <Avatar className="h-10 w-10 border-2 border-primary/20">
+                        {avatarImage && <AvatarImage src={avatarImage.imageUrl} alt={player.nickname} data-ai-hint={avatarImage.imageHint} />}
+                        <AvatarFallback>{player.nickname.charAt(0)}</AvatarFallback>
+                      </Avatar>
+                      <div className="flex-grow overflow-hidden">
+                        <p className="text-sm font-bold text-foreground truncate">{player.nickname}</p>
+                        <p className="text-xs text-muted-foreground truncate">{details?.name || player.character_role || 'Função desconhecida'}</p>
+                          {!isObserver && (
+                            <div className="flex items-center text-xs mt-1 gap-1.5">
+                                <Coins className="h-3 w-3 text-amber-500" />
+                                <span className="font-semibold">{player.capital}</span>
+                            </div>
+                          )}
+                      </div>
+                      
+                      <div className="relative h-5 w-5 flex-shrink-0 ml-auto">
+                        {isCurrentPlayer && !isObserver ? (
+                           <Crown className="h-5 w-5 text-accent animate-pulse" aria-label="Jogador atual" />
+                        ) : null}
+                         {isObserver ? (
+                           <Eye className="h-5 w-5 text-muted-foreground" aria-label="Observador" />
+                        ) : null}
+                      </div>
+
+                    </div>
+                  </TooltipTrigger>
+                  {details && (
+                    <TooltipContent>
+                        <p className="font-bold">{details.name}</p>
+                        <p>{details.description}</p>
+                    </TooltipContent>
+                  )}
+                </Tooltip>
+              </TooltipProvider>
+            );
+          })}
+        </div>
+        </ScrollArea>
+      </CardContent>
+    </>
+  );
+}
