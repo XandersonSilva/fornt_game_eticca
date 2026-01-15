@@ -3,12 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Brasil em Pauta</title>
+    <title>Brasil em Pauta - Online</title>
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="style.css ">
     <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
     
     <!-- Tailwind CSS -->
@@ -17,98 +16,62 @@
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
+    <style>
+        /* Custom styles to match original feeling */
+        .boss-battle #bg-layer { filter: sepia(100%) hue-rotate(-50deg) saturate(200%); }
+    </style>
+
     <script>
         tailwind.config = {
             darkMode: 'class',
             theme: {
-                container: {
-                    center: true,
-                    padding: "2rem",
-                    screens: {
-                        "2xl": "1400px",
-                    },
-                },
+                container: { center: true, padding: "2rem", screens: { "2xl": "1400px" } },
                 extend: {
-                    fontFamily: {
-                        body: ['Lora', 'serif'],
-                        headline: ['Playfair Display', 'serif'],
-                    },
+                    fontFamily: { body: ['Lora', 'serif'], headline: ['Playfair Display', 'serif'] },
                     colors: {
-                        border: "hsl(var(--border))",
-                        input: "hsl(var(--input))",
-                        ring: "hsl(var(--ring))",
-                        background: "hsl(var(--background))",
-                        foreground: "hsl(var(--foreground))",
-                        primary: {
-                            DEFAULT: "hsl(var(--primary))",
-                            foreground: "hsl(var(--primary-foreground))",
-                        },
-                        secondary: {
-                            DEFAULT: "hsl(var(--secondary))",
-                            foreground: "hsl(var(--secondary-foreground))",
-                        },
-                        destructive: {
-                            DEFAULT: "hsl(var(--destructive))",
-                            foreground: "hsl(var(--destructive-foreground))",
-                        },
-                        muted: {
-                            DEFAULT: "hsl(var(--muted))",
-                            foreground: "hsl(var(--muted-foreground))",
-                        },
-                        accent: {
-                            DEFAULT: "hsl(var(--accent))",
-                            foreground: "hsl(var(--accent-foreground))",
-                        },
-                        popover: {
-                            DEFAULT: "hsl(var(--popover))",
-                            foreground: "hsl(var(--popover-foreground))",
-                        },
-                        card: {
-                            DEFAULT: "hsl(var(--card))",
-                            foreground: "hsl(var(--card-foreground))",
-                        },
+                        border: "hsl(240 5.9% 90%)",
+                        input: "hsl(240 5.9% 90%)",
+                        ring: "hsl(142.1 76.2% 36.3%)",
+                        background: "hsl(20 14.3% 4.1%)", // Darker theme default
+                        foreground: "hsl(60 9.1% 97.8%)",
+                        primary: { DEFAULT: "hsl(142.1 70.6% 45.3%)", foreground: "hsl(355.7 100% 97.3%)" },
+                        secondary: { DEFAULT: "hsl(240 3.7% 15.9%)", foreground: "hsl(0 0% 98%)" },
+                        destructive: { DEFAULT: "hsl(0 62.8% 30.6%)", foreground: "hsl(0 0% 98%)" },
+                        muted: { DEFAULT: "hsl(240 3.7% 15.9%)", foreground: "hsl(240 5% 64.9%)" },
+                        accent: { DEFAULT: "hsl(12 6.5% 15.1%)", foreground: "hsl(0 0% 98%)" },
+                        popover: { DEFAULT: "hsl(20 14.3% 4.1%)", foreground: "hsl(60 9.1% 97.8%)" },
+                        card: { DEFAULT: "hsl(24 9.8% 10%)", foreground: "hsl(60 9.1% 97.8%)" },
                     },
-                    borderRadius: {
-                        lg: "var(--radius)",
-                        md: "calc(var(--radius) - 2px)",
-                        sm: "calc(var(--radius) - 4px)",
-                    },
+                    borderRadius: { lg: "0.5rem", md: "calc(0.5rem - 2px)", sm: "calc(0.5rem - 4px)" },
                 }
             }
         }
     </script>
-
 </head>
-<body class="font-body antialiased min-h-screen flex flex-col">
+<body class="font-body antialiased min-h-screen flex flex-col bg-background text-foreground">
 
     <!-- TOAST CONTAINER -->
     <div id="toast-container" class="fixed top-4 right-4 z-[100] flex flex-col gap-2"></div>
 
     <!-- APP CONTAINER -->
     <div id="app" class="flex flex-col flex-1">
-        <!-- Views will be injected here by JS -->
+        <!-- Views injected by JS -->
     </div>
 
     <!-- DIALOG (END GAME) -->
     <div id="end-game-dialog" class="fixed inset-0 z-50 bg-black/80 hidden items-center justify-center p-4">
-        <div class="bg-background border border-border rounded-lg shadow-lg w-full max-w-lg overflow-hidden flex flex-col max-h-[90vh]">
+        <div class="bg-card border border-border rounded-lg shadow-lg w-full max-w-lg overflow-hidden flex flex-col max-h-[90vh]">
             <div class="p-6 pb-2">
-                <h2 class="text-2xl font-headline font-semibold">Fim de Jogo!</h2>
+                <h2 class="text-2xl font-headline font-semibold text-primary">Fim de Jogo!</h2>
                 <p id="end-game-message" class="text-muted-foreground mt-2"></p>
             </div>
             
-            <div class="p-6 pt-2 overflow-y-auto">
-                <div class="bg-secondary/30 rounded-lg border p-4 mb-4">
-                    <h3 class="font-headline font-semibold mb-1">Análise Social</h3>
-                    <p class="text-xs text-muted-foreground mb-2">O impacto na Educação em Direitos Humanos</p>
-                    <p id="end-game-analysis" class="text-sm"></p>
-                </div>
-            </div>
-
-            <div class="p-6 pt-0 flex justify-end">
-                <button onclick="Game.reset()" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2">
-                    <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
-                    Voltar ao Lobby
+            <div class="p-6 pt-0 flex justify-end gap-2">
+                <button onclick="Game.restart()" id="btn-restart" class="hidden inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2">
+                    <i data-lucide="rotate-ccw" class="w-4 h-4"></i> Reiniciar (Criador)
+                </button>
+                <button onclick="location.reload()" class="inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium border border-input bg-secondary hover:bg-secondary/80 h-10 px-4 py-2">
+                    Sair
                 </button>
             </div>
         </div>
@@ -116,7 +79,10 @@
 
     <!-- SCRIPTS -->
     <script>
-        // --- GAME DATA & TYPES ---
+        // --- CONSTANTS & CONFIG ---
+        const API_URL = "https://brasil-em-pauta.onrender.com";
+        
+        // Mantendo as coordenadas visuais dos tiles (Client-Side)
         const TILES = [
             { id: 1, label: "1", top: 22, left: 23 }, { id: 2, label: "2", top: 32, left: 13 },
             { id: 3, label: "3", top: 39, left: 29 }, { id: 4, label: "4", top: 15, left: 37 },
@@ -142,221 +108,289 @@
             military_religion: { name: "Militar/Religião", icon: "shield" }
         };
 
-        const INITIAL_BOSSES = [
-            { position: 10, name: "Crise Midiática", requirement: { indicator: "popular_support", level: 5 } },
-            { position: 20, name: "Levante Militar", requirement: { indicator: "education", level: 6 } },
-            { position: 25, name: "Julgamento Final", requirement: { indicator: "wellbeing", level: 8 } }
-        ];
-
-        // MOCK CARDS (To simulate game flow)
-        const MOCK_CARDS = [
-            {
-                title: "Reforma Educacional",
-                dilemma: "O sistema de ensino está defasado. Uma proposta radical sugere focar em pensamento crítico, mas setores conservadores pressionam por ensino técnico.",
-                options: [
-                    { text: "Priorizar Pensamento Crítico", effect: { education: 2, popular_support: 1, military_religion: -1, board_position: 1 } },
-                    { text: "Focar em Ensino Técnico", effect: { economy: 2, education: -1, board_position: 1 } },
-                    { text: "Manter como está", effect: { popular_support: -1 } }
-                ]
-            },
-            {
-                title: "Crise de Abastecimento",
-                dilemma: "A seca afetou a produção de alimentos. O preço da cesta básica disparou e a fome ameaça as periferias.",
-                options: [
-                    { text: "Subsidiar Alimentos", effect: { economy: -2, hunger: -2, wellbeing: 1, board_position: 1 } },
-                    { text: "Deixar o mercado regular", effect: { economy: 1, hunger: 3, popular_support: -2, board_position: 1 } }
-                ]
-            },
-            {
-                title: "Escândalo de Corrupção",
-                dilemma: "Um ministro aliado foi pego em um esquema. A mídia cobra uma resposta.",
-                options: [
-                    { text: "Demitir e investigar", effect: { popular_support: 2, military_religion: -1, board_position: 1 } },
-                    { text: "Abafar o caso", effect: { economy: 1, popular_support: -3, board_position: 1 } }
-                ]
-            }
-        ];
+        // Mantendo apenas visualização de chefes, lógica está no servidor
+        const BOSS_VISUALS = {
+            10: { name: "Crise Midiática", icon: "tv" },
+            20: { name: "Levante Militar", icon: "swords" },
+            25: { name: "Julgamento Final", icon: "scale" }
+        };
 
         // --- STATE MANAGEMENT ---
         const State = {
-            view: 'lobby', // lobby | game
-            gameCode: null,
+            userUid: null,
             playerName: '',
-            difficulty: 'easy',
-            isObserver: false,
+            gameCode: null,
+            isCreator: false,
+            pollingInterval: null,
             
-            // Game Session Data
-            session: {
-                status: 'waiting',
-                turn: 1,
-                board_position: 1,
-                indicators: {
-                    economy: 5, education: 5, wellbeing: 5, 
-                    popular_support: 5, hunger: 2, military_religion: 5
-                },
+            // Server Data
+            serverData: {
+                status: 'waiting', // waiting, in_progress, finished
                 players: [],
-                logs: [],
                 currentCard: null,
-                gameOverMessage: null
+                logs: [],
+                stats: {}, // economy, etc
+                board_position: 0,
+                current_player_index: 0
             },
             
             ui: {
-                tab: 'decisao', // mapa | decisao | diario | nacao
-                isProcessing: false
+                tab: 'decisao',
+                isProcessing: false,
+                view: 'lobby' // lobby, waiting, game
             }
         };
 
         // --- UTILS ---
-        function generateId() { return Math.random().toString(36).substring(2, 9); }
-        
+        function getOrSetUid() {
+            let uid = localStorage.getItem('bp_user_uid');
+            if (!uid) {
+                uid = 'user_' + Math.random().toString(36).substring(2, 9) + Date.now().toString(36);
+                localStorage.setItem('bp_user_uid', uid);
+            }
+            return uid;
+        }
+
         function showToast(title, description, variant = 'default') {
             const container = document.getElementById('toast-container');
             const toast = document.createElement('div');
-            
-            const bgClass = variant === 'destructive' ? 'bg-destructive text-destructive-foreground' : 'bg-background text-foreground';
-            const borderClass = variant === 'destructive' ? 'border-destructive' : 'border-border';
-
-            toast.className = `group pointer-events-auto relative flex w-full items-center justify-between space-x-4 overflow-hidden rounded-md border p-6 pr-8 shadow-lg transition-all ${bgClass} ${borderClass}`;
-            toast.innerHTML = `
-                <div class="grid gap-1">
-                    <div class="text-sm font-semibold">${title}</div>
-                    ${description ? `<div class="text-sm opacity-90">${description}</div>` : ''}
-                </div>
-                <button onclick="this.parentElement.remove()" class="absolute right-2 top-2 rounded-md p-1 opacity-50 hover:opacity-100"><i data-lucide="x" class="h-4 w-4"></i></button>
-            `;
-            
+            const bgClass = variant === 'destructive' ? 'bg-destructive text-destructive-foreground' : 'bg-card text-foreground';
+            toast.className = `flex w-full max-w-sm items-center justify-between space-x-4 overflow-hidden rounded-md border p-4 shadow-lg transition-all animate-in slide-in-from-right-full ${bgClass}`;
+            toast.innerHTML = `<div><div class="font-bold">${title}</div><div class="text-sm opacity-90">${description}</div></div>`;
             container.appendChild(toast);
-            lucide.createIcons();
-            
-            setTimeout(() => {
-                toast.style.opacity = '0';
-                setTimeout(() => toast.remove(), 300);
-            }, 3000);
+            setTimeout(() => toast.remove(), 4000);
         }
 
-        // --- CORE GAME LOGIC (SIMULATION) ---
-        const GameLogic = {
-            startGame: () => {
-                State.session.status = 'in_progress';
-                State.session.players = [
-                    { id: 'p1', nickname: State.playerName, role: 'Líder', avatar: 1, capital: 50, isOpportunist: false },
-                    { id: 'p2', nickname: 'Bot Opositor', role: 'Oportunista', avatar: 2, capital: 100, isOpportunist: true },
-                    { id: 'p3', nickname: 'Bot Aliado', role: 'Ministro', avatar: 3, capital: 20, isOpportunist: false }
-                ];
-                
-                // FIX: Render game first to ensure DOM elements exist before updateUI is called by nextTurn
-                Renderer.renderGame();
-                GameLogic.nextTurn();
+        // --- API SERVICE ---
+        const API = {
+            request: async (endpoint, method = 'GET', body = null) => {
+                try {
+                    const options = {
+                        method,
+                        headers: { 'Content-Type': 'application/json' }
+                    };
+                    if (body) options.body = JSON.stringify(body);
+                    
+                    const res = await fetch(`${API_URL}${endpoint}`, options);
+                    const data = await res.json();
+                    
+                    if (!res.ok) throw new Error(data.message || 'Erro na requisição');
+                    return data;
+                } catch (error) {
+                    console.error("API Error:", error);
+                    showToast("Erro", error.message, "destructive");
+                    throw error;
+                }
+            }
+        };
+
+        // --- GAME ACTIONS ---
+        const Game = {
+            init: () => {
+                State.userUid = getOrSetUid();
+                const storedName = localStorage.getItem('bp_player_name');
+                if (storedName) State.playerName = storedName;
+                Renderer.renderLobby();
             },
 
-            nextTurn: () => {
-                // Pick a random card
-                State.session.currentCard = MOCK_CARDS[Math.floor(Math.random() * MOCK_CARDS.length)];
-                State.session.turn++;
-                Renderer.updateUI();
-            },
-
-            processDecision: (optionIndex) => {
-                State.ui.isProcessing = true;
-                Renderer.updateUI();
-
-                const option = State.session.currentCard.options[optionIndex];
+            create: async () => {
+                const name = document.getElementById('create-name').value;
+                if (!name) return showToast("Erro", "Digite seu nome", "destructive");
                 
-                // Simulate delay
-                setTimeout(() => {
-                    // Apply effects
-                    for (const [key, value] of Object.entries(option.effect)) {
-                        if (key === 'board_position') {
-                            State.session.board_position = Math.min(25, State.session.board_position + value);
-                        } else if (State.session.indicators[key] !== undefined) {
-                            State.session.indicators[key] = Math.max(0, Math.min(10, State.session.indicators[key] + value));
-                        }
-                    }
+                State.playerName = name;
+                localStorage.setItem('bp_player_name', name);
+                State.isCreator = true;
 
-                    // Add Log
-                    const effectsText = Object.entries(option.effect).map(([k, v]) => `${k}: ${v}`).join(', ');
-                    State.session.logs.push({
-                        id: generateId(),
-                        turn: State.session.turn,
+                try {
+                    State.ui.isProcessing = true;
+                    Renderer.updateButtons();
+                    
+                    const res = await API.request('/game/create', 'POST', {
+                        userUid: State.userUid,
                         playerName: State.playerName,
-                        playerRole: 'Líder',
-                        decision: option.text,
-                        effects: effectsText
+                        difficulty: 'easy'
+                    });
+                    
+                    if (res.success) {
+                        State.gameCode = res.gameCode;
+                        Game.startPolling();
+                        Renderer.renderWaitingRoom();
+                    }
+                } catch (e) {
+                    // Toast handled by API wrapper
+                } finally {
+                    State.ui.isProcessing = false;
+                    Renderer.updateButtons();
+                }
+            },
+
+            join: async () => {
+                const name = document.getElementById('join-name').value;
+                const code = document.getElementById('join-code').value.toUpperCase();
+                
+                if (!name || !code) return showToast("Erro", "Preencha nome e código", "destructive");
+
+                State.playerName = name;
+                localStorage.setItem('bp_player_name', name);
+                State.isCreator = false;
+
+                try {
+                    State.ui.isProcessing = true;
+                    Renderer.updateButtons();
+
+                    const res = await API.request('/game/join', 'POST', {
+                        gameCode: code,
+                        userUid: State.userUid,
+                        playerName: State.playerName
                     });
 
-                    // Check Win/Loss
-                    const gameResult = GameLogic.checkWinConditions();
-                    
-                    if (gameResult.isGameOver) {
-                        State.session.status = 'finished';
-                        State.session.gameOverMessage = gameResult.message;
-                        Renderer.showEndGame(gameResult.message);
-                    } else {
-                        GameLogic.nextTurn();
+                    if (res.success) {
+                        State.gameCode = code;
+                        Game.startPolling();
+                        Renderer.renderWaitingRoom();
                     }
-
+                } catch (e) {
+                    // Toast handled
+                } finally {
                     State.ui.isProcessing = false;
-                    Renderer.updateUI();
-                }, 1000);
+                    Renderer.updateButtons();
+                }
             },
 
-            checkWinConditions: () => {
-                const inds = State.session.indicators;
-                const pos = State.session.board_position;
+            startGame: async () => {
+                try {
+                    await API.request('/game/start', 'POST', { gameCode: State.gameCode });
+                    // Polling vai pegar a mudança de status e renderizar o jogo
+                } catch (e) {}
+            },
+
+            startPolling: () => {
+                if (State.pollingInterval) clearInterval(State.pollingInterval);
                 
-                // 1. Loss Conditions
-                if (inds.economy <= 0 || inds.education <= 0 || inds.wellbeing <= 0 || inds.popular_support <= 0) {
-                    return { isGameOver: true, message: "Colapso! Um indicador essencial chegou a zero. O país entrou em ruínas." };
-                }
-                if (inds.hunger >= 10) {
-                    return { isGameOver: true, message: "Colapso! A fome atingiu níveis insustentáveis. Todos perdem." };
-                }
+                // Primeira chamada imediata
+                Game.fetchState();
 
-                // 2. Win Conditions (Simplified)
-                if (pos >= 25) {
-                    if (inds.education >= 7 && inds.wellbeing >= 7 && inds.hunger < 3) {
-                         return { isGameOver: true, message: "Vitória Coletiva! A nação prosperou e alcançou a Justiça Social!" };
-                    } else {
-                         return { isGameOver: true, message: "Vitória do Oportunista! O povo foi alienado e o poder concentrado." };
+                State.pollingInterval = setInterval(async () => {
+                    await Game.fetchState();
+                }, 2000);
+            },
+
+            fetchState: async () => {
+                try {
+                    const data = await API.request(`/game/${State.gameCode}`, 'GET');
+                    
+                    // Verifica mudança de estado para renderizar a view correta
+                    const prevStatus = State.serverData.status;
+                    
+                    // Mapeia resposta da API para State
+                    State.serverData = {
+                        status: data.status,
+                        players: data.players || [],
+                        currentCard: data.currentCard,
+                        logs: data.logs || [],
+                        stats: {
+                            economy: data.economy,
+                            education: data.education,
+                            wellbeing: data.wellbeing,
+                            popular_support: data.popular_support,
+                            hunger: data.hunger,
+                            military_religion: data.military_religion
+                        },
+                        board_position: data.board_position,
+                        current_player_index: data.current_player_index,
+                        game_over_message: data.game_over_message,
+                        creator_uid: data.creator_user_uid
+                    };
+
+                    // Define se sou criador baseado na resposta do servidor (mais seguro)
+                    State.isCreator = (State.userUid === data.creator_user_uid);
+
+                    // Lógica de navegação de telas
+                    if (State.serverData.status === 'in_progress' && State.ui.view !== 'game') {
+                        State.ui.view = 'game';
+                        Renderer.renderGame();
+                    } else if (State.serverData.status === 'finished') {
+                        Renderer.showEndGame(State.serverData.game_over_message);
+                    } else if (State.serverData.status === 'waiting' && State.ui.view === 'lobby') {
+                        // Se por acaso caiu aqui sem passar pelo create/join manual
+                         Renderer.renderWaitingRoom();
                     }
-                }
 
-                return { isGameOver: false, message: "" };
+                    if (State.ui.view === 'game') {
+                        Renderer.updateGameUI();
+                    } else if (State.ui.view === 'waiting') {
+                        Renderer.updateWaitingUI();
+                    }
+
+                } catch (e) {
+                    console.error("Polling error", e);
+                }
+            },
+
+            makeDecision: async (choiceIndex) => {
+                try {
+                    State.ui.isProcessing = true;
+                    Renderer.updateGameUI(); // Desabilita botões visualmente
+
+                    await API.request('/game/decision', 'POST', {
+                        gameCode: State.gameCode,
+                        userUid: State.userUid,
+                        choice: choiceIndex
+                    });
+                    
+                    // Polling vai atualizar o resto
+                } catch (e) {
+                } finally {
+                    State.ui.isProcessing = false;
+                }
+            },
+
+            restart: async () => {
+                try {
+                    await API.request('/game/restart', 'POST', {
+                        gameCode: State.gameCode,
+                        userUid: State.userUid
+                    });
+                    document.getElementById('end-game-dialog').classList.add('hidden');
+                    document.getElementById('end-game-dialog').classList.remove('flex');
+                } catch (e) {}
+            },
+
+            setTab: (tab) => {
+                State.ui.tab = tab;
+                Renderer.updateGameUI();
             }
         };
 
         // --- RENDERER ---
         const Renderer = {
-            init: () => {
-                Renderer.renderLobby();
-            },
-
             renderLobby: () => {
+                State.ui.view = 'lobby';
                 const app = document.getElementById('app');
                 app.innerHTML = `
-                    <div class="flex min-h-screen flex-col items-center justify-center bg-background p-4">
-                        <div class="flex items-center space-x-3 mb-8">
-                            <i data-lucide="scale" class="h-10 w-10 text-primary"></i>
-                            <h1 class="text-4xl font-bold tracking-tight text-foreground font-headline">Brasil em Pauta</h1>
+                    <div class="flex min-h-screen flex-col items-center justify-center bg-black/40 p-4 bg-[url('https://i.ibb.co/0ykrc3cK/TABULEIRO-0001903.png')] bg-cover bg-center bg-blend-overlay">
+                        <div class="flex items-center space-x-3 mb-8 animate-bounce">
+                            <i data-lucide="scale" class="h-12 w-12 text-primary"></i>
+                            <h1 class="text-5xl font-bold tracking-tight text-white font-headline drop-shadow-md">Brasil em Pauta</h1>
                         </div>
-                        <div class="w-full max-w-md bg-card/80 backdrop-blur-sm border border-primary/20 rounded-lg shadow-2xl p-6">
-                            <h2 class="text-2xl font-headline text-center mb-2">Lobby</h2>
-                            <p class="text-center text-muted-foreground text-sm mb-6">Crie uma nova partida (Simulação Local).</p>
-                            
-                            <div class="space-y-4">
-                                <input type="text" id="player-name" placeholder="Seu nome" class="flex h-10 w-full rounded-md border border-input bg-transparent px-3 py-2 text-sm placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 text-center" value="${State.playerName}">
-                                
-                                <div class="space-y-2">
-                                    <label class="text-sm font-medium text-center block">Dificuldade</label>
-                                    <select id="difficulty-select" class="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
-                                        <option value="easy">Fácil</option>
-                                        <option value="medium">Médio</option>
-                                        <option value="hard">Difícil</option>
-                                    </select>
-                                </div>
+                        
+                        <div class="grid md:grid-cols-2 gap-6 w-full max-w-4xl">
+                            <!-- CRIAR -->
+                            <div class="bg-card/90 backdrop-blur border border-primary/20 rounded-xl shadow-2xl p-6 flex flex-col gap-4">
+                                <h2 class="text-2xl font-headline text-primary text-center">Nova Partida</h2>
+                                <input type="text" id="create-name" placeholder="Seu Nome" value="${State.playerName}" class="flex h-10 w-full rounded-md border border-input bg-background/50 px-3 py-2 text-sm focus:ring-2 focus:ring-primary outline-none">
+                                <button onclick="Game.create()" id="btn-create" class="bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 rounded-md font-medium transition-all">
+                                    Criar Sala
+                                </button>
+                            </div>
 
-                                <button onclick="Game.create()" class="inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium ring-offset-background transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 w-full">
-                                    Iniciar Partida
+                            <!-- ENTRAR -->
+                            <div class="bg-card/90 backdrop-blur border border-white/10 rounded-xl shadow-2xl p-6 flex flex-col gap-4">
+                                <h2 class="text-2xl font-headline text-white text-center">Entrar em Sala</h2>
+                                <input type="text" id="join-name" placeholder="Seu Nome" value="${State.playerName}" class="flex h-10 w-full rounded-md border border-input bg-background/50 px-3 py-2 text-sm focus:ring-2 focus:ring-primary outline-none">
+                                <input type="text" id="join-code" placeholder="CÓDIGO (Ex: X7B9K2)" class="flex h-10 w-full rounded-md border border-input bg-background/50 px-3 py-2 text-sm uppercase focus:ring-2 focus:ring-primary outline-none tracking-widest font-bold text-center">
+                                <button onclick="Game.join()" id="btn-join" class="bg-secondary text-secondary-foreground hover:bg-secondary/80 h-10 px-4 py-2 rounded-md font-medium transition-all">
+                                    Conectar
                                 </button>
                             </div>
                         </div>
@@ -365,144 +399,207 @@
                 lucide.createIcons();
             },
 
+            renderWaitingRoom: () => {
+                State.ui.view = 'waiting';
+                const app = document.getElementById('app');
+                app.innerHTML = `
+                    <div class="flex min-h-screen flex-col items-center justify-center bg-background p-4">
+                        <div class="w-full max-w-md bg-card border border-border rounded-lg shadow-xl p-6 text-center">
+                            <h2 class="text-xl font-headline mb-2 text-muted-foreground">Sala de Espera</h2>
+                            <div class="text-4xl font-bold tracking-[0.5em] text-primary mb-6 bg-secondary/30 p-4 rounded border border-dashed border-primary/30">
+                                ${State.gameCode}
+                            </div>
+                            
+                            <div class="mb-6">
+                                <h3 class="text-sm font-medium text-left mb-2 ml-1">Jogadores Conectados:</h3>
+                                <div id="player-list" class="space-y-2">
+                                    <!-- Player list injected here -->
+                                </div>
+                            </div>
+
+                            <div id="creator-controls" class="hidden">
+                                <button onclick="Game.startGame()" class="w-full bg-primary text-primary-foreground h-12 rounded-md font-bold text-lg hover:bg-primary/90 transition-all shadow-lg shadow-primary/20">
+                                    INICIAR PARTIDA
+                                </button>
+                            </div>
+                            <div id="waiting-msg" class="hidden text-sm text-muted-foreground animate-pulse">
+                                Aguardando o líder iniciar...
+                            </div>
+                        </div>
+                    </div>
+                `;
+                Renderer.updateWaitingUI();
+            },
+
+            updateWaitingUI: () => {
+                const list = document.getElementById('player-list');
+                if(!list) return;
+
+                list.innerHTML = State.serverData.players.map(p => `
+                    <div class="flex items-center justify-between p-3 bg-secondary rounded-md border border-transparent ${p.user_uid === State.userUid ? 'border-primary/50' : ''}">
+                        <div class="flex items-center gap-3">
+                            <div class="h-8 w-8 rounded-full bg-primary/20 flex items-center justify-center text-primary font-bold">
+                                ${p.nickname.charAt(0).toUpperCase()}
+                            </div>
+                            <span class="font-medium">${p.nickname} ${p.user_uid === State.userUid ? '(Você)' : ''}</span>
+                        </div>
+                        ${p.user_uid === State.serverData.creator_uid ? '<i data-lucide="crown" class="h-4 w-4 text-yellow-500"></i>' : ''}
+                    </div>
+                `).join('');
+                
+                lucide.createIcons();
+
+                const creatorControls = document.getElementById('creator-controls');
+                const waitingMsg = document.getElementById('waiting-msg');
+
+                if (State.isCreator) {
+                    creatorControls.classList.remove('hidden');
+                    waitingMsg.classList.add('hidden');
+                } else {
+                    creatorControls.classList.add('hidden');
+                    waitingMsg.classList.remove('hidden');
+                }
+            },
+
             renderGame: () => {
                 const app = document.getElementById('app');
-                // Determining background class based on a boss battle
-                const currentBoss = INITIAL_BOSSES.find(b => b.position === State.session.board_position);
-                const containerClass = currentBoss ? "boss-battle transition-colors duration-500" : "transition-colors duration-500";
-                
-                app.className = `flex flex-col min-h-screen ${containerClass}`;
+                app.className = "flex flex-col min-h-screen bg-background";
                 app.innerHTML = `
                     <!-- HEADER -->
-                    <header class="bg-card/50 border-b shadow-sm sticky top-0 z-20 backdrop-blur-sm">
-                        <div class="container mx-auto px-4 h-16 flex items-center justify-between">
-                            <div class="flex items-center space-x-3">
-                                <i data-lucide="scale" class="h-8 w-8 text-primary"></i>
-                                <h1 class="text-xl sm:text-2xl font-bold text-foreground font-headline">Brasil em Pauta</h1>
+                    <header class="bg-card/90 border-b border-border shadow-sm sticky top-0 z-20 backdrop-blur-md">
+                        <div class="container mx-auto px-4 h-14 flex items-center justify-between">
+                            <div class="flex items-center space-x-2">
+                                <i data-lucide="scale" class="h-6 w-6 text-primary"></i>
+                                <h1 class="hidden sm:block text-lg font-bold font-headline">Brasil em Pauta</h1>
                             </div>
-                            <div class="hidden md:flex items-center gap-2 rounded-md border bg-background/50 px-3 py-1.5">
-                                <span class="text-sm font-medium text-muted-foreground">CÓDIGO:</span>
-                                <span class="text-sm font-bold tracking-widest text-primary">${State.gameCode}</span>
-                            </div>
-                            <div class="flex items-center gap-2">
-                                <button class="inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium border border-input bg-background hover:bg-accent hover:text-accent-foreground h-9 px-3">
-                                    <i data-lucide="users" class="h-4 w-4"></i>
-                                    <span>Gabinete (${State.session.players.length})</span>
-                                </button>
+                            <div class="flex items-center gap-4">
+                                <div class="flex flex-col items-end">
+                                    <span class="text-[10px] text-muted-foreground">CÓDIGO</span>
+                                    <span class="text-sm font-bold tracking-widest text-primary leading-none">${State.gameCode}</span>
+                                </div>
+                                <div class="h-8 w-[1px] bg-border mx-2"></div>
+                                <div class="flex items-center gap-2">
+                                     <span class="text-xs text-muted-foreground hidden sm:inline">Jogadores:</span>
+                                     <div id="header-players" class="flex -space-x-2"></div>
+                                </div>
                             </div>
                         </div>
                     </header>
 
-                    <!-- DESKTOP DASHBOARD (Hidden on Mobile) -->
-                    <div class="hidden md:block w-full bg-card/20 py-2 border-b px-4">
-                        <div id="desktop-indicators" class="grid grid-cols-6 gap-4">
-                            <!-- Injected by updateUI -->
-                        </div>
+                    <!-- DESKTOP STATS -->
+                    <div class="hidden md:block w-full bg-secondary/30 py-3 border-b border-border">
+                        <div id="desktop-indicators" class="container mx-auto px-4 grid grid-cols-6 gap-6"></div>
                     </div>
 
-                    <!-- MAIN CONTENT -->
-                    <main class="flex-1 flex flex-col md:grid md:grid-cols-3 md:gap-4 md:p-4 min-h-0 overflow-hidden">
+                    <!-- MAIN -->
+                    <main class="flex-1 flex flex-col md:grid md:grid-cols-3 md:gap-6 md:p-6 min-h-0 overflow-hidden relative">
                         
-                        <!-- MAP AREA (Always visible on Desktop, Tab on Mobile) -->
-                        <div id="view-map" class="tab-content active col-span-2 relative flex flex-col items-center justify-center bg-card/10 rounded-lg overflow-hidden h-full">
-                            <div id="game-board-container" class="relative w-full aspect-[4/3] max-h-[70vh]">
-                                <!-- Background Images Logic managed by JS -->
+                        <!-- MAPA (Esquerda/Centro) -->
+                        <div id="view-map" class="col-span-2 relative flex flex-col bg-black rounded-lg overflow-hidden border border-border/50 shadow-2xl">
+                            <div id="game-board-container" class="relative w-full aspect-[4/3] max-h-[75vh] m-auto">
                                 <div id="bg-layer" class="absolute inset-0 w-full h-full bg-cover bg-center transition-all duration-1000"></div>
                                 <div id="tiles-layer" class="absolute inset-0 w-full h-full"></div>
                                 <div id="boss-overlay-layer"></div>
                             </div>
                         </div>
 
-                        <!-- SIDE PANEL (Decision/Tabs) -->
-                        <div class="col-span-1 flex flex-col h-full min-h-0 overflow-hidden relative">
-                             <!-- Mobile Tabs View -->
-                             <div class="md:hidden flex-1 overflow-y-auto p-2" id="mobile-content-area">
-                                 <!-- Dynamic Content Injected Here for Mobile -->
-                             </div>
-
-                             <!-- Desktop Decision Card (Always here on Desktop) -->
-                             <div class="hidden md:flex flex-col h-full" id="desktop-decision-area">
-                                 <!-- Injected Decision Card -->
-                             </div>
+                        <!-- PAINEL (Direita) -->
+                        <div class="col-span-1 flex flex-col h-full min-h-0 overflow-hidden relative bg-card md:rounded-lg md:border md:border-border">
+                             <!-- Mobile Content -->
+                             <div class="md:hidden flex-1 overflow-y-auto p-4" id="mobile-content-area"></div>
+                             
+                             <!-- Desktop Content -->
+                             <div class="hidden md:flex flex-col h-full" id="desktop-decision-area"></div>
                         </div>
                     </main>
 
-                    <!-- MOBILE BOTTOM TABS -->
-                    <div class="md:hidden bg-background border-t grid grid-cols-4 h-14">
-                        <button onclick="Game.setTab('mapa')" class="flex flex-col items-center justify-center gap-1 text-xs text-muted-foreground hover:text-primary data-[active=true]:text-primary" data-tab="mapa">
-                            <i data-lucide="map" class="h-5 w-5"></i> Mapa
+                    <!-- MOBILE NAV -->
+                    <nav class="md:hidden bg-card border-t border-border grid grid-cols-4 h-16 pb-safe">
+                        <button onclick="Game.setTab('mapa')" class="nav-btn" data-tab="mapa">
+                            <i data-lucide="map" class="h-5 w-5 mb-1"></i> Mapa
                         </button>
-                        <button onclick="Game.setTab('decisao')" class="flex flex-col items-center justify-center gap-1 text-xs text-muted-foreground hover:text-primary data-[active=true]:text-primary" data-tab="decisao">
-                            <i data-lucide="vote" class="h-5 w-5"></i> Decisão
+                        <button onclick="Game.setTab('decisao')" class="nav-btn" data-tab="decisao">
+                            <i data-lucide="vote" class="h-5 w-5 mb-1"></i> Decisão
                         </button>
-                        <button onclick="Game.setTab('diario')" class="flex flex-col items-center justify-center gap-1 text-xs text-muted-foreground hover:text-primary data-[active=true]:text-primary" data-tab="diario">
-                            <i data-lucide="book-open" class="h-5 w-5"></i> Diário
+                        <button onclick="Game.setTab('diario')" class="nav-btn" data-tab="diario">
+                            <i data-lucide="scroll-text" class="h-5 w-5 mb-1"></i> Diário
                         </button>
-                        <button onclick="Game.setTab('nacao')" class="flex flex-col items-center justify-center gap-1 text-xs text-muted-foreground hover:text-primary data-[active=true]:text-primary" data-tab="nacao">
-                            <i data-lucide="users" class="h-5 w-5"></i> Nação
+                        <button onclick="Game.setTab('nacao')" class="nav-btn" data-tab="nacao">
+                            <i data-lucide="activity" class="h-5 w-5 mb-1"></i> Nação
                         </button>
-                    </div>
+                    </nav>
                 `;
-                Renderer.updateUI();
+                Renderer.updateGameUI();
             },
 
-            updateUI: () => {
-                // 1. Update Indicators
-                const indicatorsHTML = Object.entries(State.session.indicators).map(([key, value]) => {
+            updateGameUI: () => {
+                if(!State.serverData) return;
+
+                const { stats, board_position, currentCard, players, current_player_index, logs } = State.serverData;
+                const currentPlayer = players[current_player_index];
+                const isMyTurn = currentPlayer && currentPlayer.user_uid === State.userUid;
+
+                // 1. Header Players
+                const headerPlayers = document.getElementById('header-players');
+                if(headerPlayers) {
+                    headerPlayers.innerHTML = players.map((p, idx) => `
+                        <div class="relative h-8 w-8 rounded-full border-2 ${idx === current_player_index ? 'border-primary z-10 scale-110' : 'border-background bg-muted'} flex items-center justify-center text-xs font-bold text-foreground bg-secondary" title="${p.nickname}">
+                            ${p.nickname.charAt(0)}
+                            ${idx === current_player_index ? '<span class="absolute -top-1 -right-1 h-3 w-3 bg-primary rounded-full animate-ping"></span>' : ''}
+                        </div>
+                    `).join('');
+                }
+
+                // 2. Indicators HTML Builder
+                const buildIndicators = () => Object.entries(stats).map(([key, value]) => {
+                    if(!INDICATORS_INFO[key]) return '';
                     const info = INDICATORS_INFO[key];
-                    let colorClass = "bg-green-500";
+                    let color = "bg-yellow-500";
                     if (key === 'hunger') {
-                        if (value >= 8) colorClass = "bg-red-500";
-                        else if (value >= 5) colorClass = "bg-yellow-500";
+                        color = value >= 7 ? "bg-red-600" : (value >= 4 ? "bg-yellow-500" : "bg-emerald-500");
                     } else {
-                        if (value <= 2) colorClass = "bg-red-500";
-                        else if (value <= 5) colorClass = "bg-yellow-500";
+                        color = value <= 3 ? "bg-red-600" : (value <= 6 ? "bg-yellow-500" : "bg-emerald-500");
                     }
                     
                     return `
-                        <div class="flex flex-col space-y-1">
-                            <div class="flex items-center justify-between text-xs font-medium">
-                                <div class="flex items-center gap-1">
-                                    <i data-lucide="${info.icon}" class="h-3 w-3"></i>
-                                    <span>${info.name}</span>
-                                </div>
-                                <span>${value}</span>
+                        <div class="flex flex-col gap-1">
+                            <div class="flex justify-between text-xs font-medium text-muted-foreground uppercase tracking-wider">
+                                <span class="flex items-center gap-1"><i data-lucide="${info.icon}" class="w-3 h-3"></i> ${info.name}</span>
+                                <span class="text-foreground">${value}</span>
                             </div>
-                            <div class="h-2 w-full bg-secondary rounded-full overflow-hidden">
-                                <div class="h-full ${colorClass} transition-all duration-500" style="width: ${value * 10}%"></div>
+                            <div class="h-1.5 w-full bg-secondary rounded-full overflow-hidden">
+                                <div class="h-full ${color} transition-all duration-700" style="width: ${value * 10}%"></div>
                             </div>
                         </div>
                     `;
                 }).join('');
-                
-                const deskInd = document.getElementById('desktop-indicators');
-                if(deskInd) deskInd.innerHTML = indicatorsHTML;
 
-                // 2. Update Board Background & Tiles
+                const deskInd = document.getElementById('desktop-indicators');
+                if(deskInd) deskInd.innerHTML = buildIndicators();
+
+                // 3. Board Visuals
                 const bgLayer = document.getElementById('bg-layer');
                 if (bgLayer) {
-                    // Calculate State
-                    const core = [State.session.indicators.economy, State.session.indicators.education, State.session.indicators.wellbeing, State.session.indicators.popular_support];
-                    const collapse = core.some(v => v <= 1) || core.filter(v => v <= 3).length >= 2;
-                    const sovereign = core.every(v => v >= 5) && State.session.indicators.hunger < 5 && core.filter(v => v >= 8).length >= 3;
-                    
-                    let bgSrc = 'https://i.ibb.co/0ykrc3cK/TABULEIRO-0001903.png'; // Neutral
-                    if (collapse) bgSrc = 'https://i.ibb.co/5Xk4qFY3/TABULEIRO-0001908.png'; // Collapse
-                    else if (sovereign) bgSrc = 'https://i.ibb.co/Hpk9ByxC/TABULEIRO-0001918.png'; // Sovereign
-
+                    // Lógica visual simples baseada em status
+                    const isChaos = stats.popular_support <= 2 || stats.economy <= 2;
+                    const isGood = stats.wellbeing >= 7 && stats.education >= 7;
+                    let bgSrc = 'https://i.ibb.co/0ykrc3cK/TABULEIRO-0001903.png';
+                    if (isChaos) bgSrc = 'https://i.ibb.co/5Xk4qFY3/TABULEIRO-0001908.png';
+                    else if (isGood) bgSrc = 'https://i.ibb.co/Hpk9ByxC/TABULEIRO-0001918.png';
                     bgLayer.style.backgroundImage = `url('${bgSrc}')`;
                 }
 
                 const tilesLayer = document.getElementById('tiles-layer');
                 if (tilesLayer) {
                     tilesLayer.innerHTML = TILES.map(tile => {
-                        const isCurrent = tile.id === State.session.board_position;
+                        // API retorna board_position 0-25. Tile ID 1 map to pos 1.
+                        const isCurrent = tile.id === board_position;
                         const activeClass = isCurrent ? 
-                            "scale-150 border-yellow-400 ring-4 ring-yellow-400/50 z-10 from-yellow-500 to-orange-600 shadow-yellow-500/50" : 
-                            "hover:scale-125 hover:border-white hover:z-20 bg-gradient-to-br from-green-600 to-green-900 border-white/50";
+                            "scale-150 border-yellow-400 z-20 shadow-[0_0_15px_rgba(250,204,21,0.6)] bg-yellow-600 text-white" : 
+                            "bg-black/40 border-white/30 text-white/50";
                         
                         return `
-                            <div class="absolute w-[3.5%] h-[4.5%] flex justify-center items-center rounded-full text-[10px] sm:text-xs font-bold text-white shadow-lg cursor-default transition-all duration-300 border ${activeClass}" 
+                            <div class="absolute w-[3.5%] h-[4.5%] flex justify-center items-center rounded-full text-[10px] font-bold border transition-all duration-500 ${activeClass}" 
                             style="top: ${tile.top}%; left: ${tile.left}%;">
                                 ${tile.label}
                             </div>
@@ -510,178 +607,162 @@
                     }).join('');
                 }
 
-                // 3. Update Boss Overlay
-                const currentBoss = INITIAL_BOSSES.find(b => b.position === State.session.board_position);
+                // Boss Overlay Visual
                 const bossLayer = document.getElementById('boss-overlay-layer');
-                if (bossLayer && currentBoss) {
-                     const reqName = INDICATORS_INFO[currentBoss.requirement.indicator].name;
-                     bossLayer.innerHTML = `
-                        <div class="absolute inset-0 z-30 flex flex-col items-center justify-center bg-black/50 backdrop-blur-sm animate-in fade-in">
-                             <i data-lucide="skull" class="absolute text-red-900/40 w-48 h-48 animate-pulse"></i>
-                             <div class="relative z-10 flex flex-col items-center gap-2 text-center p-4">
-                                <i data-lucide="shield-alert" class="w-12 h-12 text-destructive animate-bounce"></i>
-                                <h2 class="text-2xl font-extrabold text-white font-headline drop-shadow-lg">Desafio: ${currentBoss.name}</h2>
-                                <p class="text-sm font-semibold text-destructive-foreground bg-destructive/80 px-3 py-1 rounded-md shadow-lg">
-                                    Requisito: ${reqName} nível ${currentBoss.requirement.level} para avançar.
-                                </p>
-                             </div>
-                        </div>
-                     `;
-                } else if (bossLayer) {
-                    bossLayer.innerHTML = '';
+                if (bossLayer) {
+                    const boss = BOSS_VISUALS[board_position];
+                    if (boss) {
+                        bossLayer.innerHTML = `
+                            <div class="absolute inset-0 bg-black/60 flex items-center justify-center animate-in fade-in duration-1000">
+                                <div class="text-center p-6 bg-destructive/20 rounded-xl border border-destructive/50 backdrop-blur-sm">
+                                    <i data-lucide="${boss.icon}" class="w-16 h-16 text-destructive mx-auto mb-2 animate-pulse"></i>
+                                    <h2 class="text-2xl font-bold text-white uppercase tracking-widest">${boss.name}</h2>
+                                    <p class="text-white/80 text-sm mt-1">Momento Decisivo</p>
+                                </div>
+                            </div>
+                        `;
+                    } else {
+                        bossLayer.innerHTML = '';
+                    }
                 }
 
-                // 4. Update Decision Card Content (Shared Generator)
-                const generateDecisionCard = () => {
-                    const card = State.session.currentCard;
-                    if (!card) return `<div class="p-4 text-center">Carregando...</div>`;
-
-                    const optionsHTML = card.options.map((opt, idx) => {
-                        const effectHTML = State.difficulty === 'easy' ? `
-                            <div class="mt-2 text-xs flex flex-wrap gap-2 opacity-80">
-                                ${Object.entries(opt.effect).map(([k, v]) => {
-                                    const isGood = (k === 'hunger' && v < 0) || (k !== 'hunger' && v > 0);
-                                    const color = isGood ? 'text-emerald-500' : 'text-rose-500';
-                                    const label = k === 'board_position' ? 'Avança' : (INDICATORS_INFO[k]?.name || k);
-                                    return `<span class="${color}">${label} ${v > 0 ? '+' : ''}${v}</span>`;
-                                }).join('')}
-                            </div>
-                        ` : '';
-
+                // 4. Decision / Card Area
+                const buildCard = () => {
+                    if (!currentCard) {
                         return `
-                        <button onclick="Game.decide(${idx})" ${State.ui.isProcessing ? 'disabled' : ''} class="w-full text-left p-3 rounded-lg border border-border/60 bg-card hover:border-primary hover:shadow-md transition-all group disabled:opacity-50">
-                            <h3 class="font-bold text-foreground group-hover:text-primary transition-colors">${opt.text}</h3>
-                            ${effectHTML}
-                        </button>
+                            <div class="flex flex-col items-center justify-center h-full text-muted-foreground gap-3 p-8 text-center opacity-50">
+                                <i data-lucide="hourglass" class="w-10 h-10 animate-spin-slow"></i>
+                                <p>Processando próximo evento...</p>
+                            </div>
                         `;
-                    }).join('');
+                    }
+
+                    const canAct = isMyTurn && !State.ui.isProcessing;
 
                     return `
-                        <div class="h-full flex flex-col p-4 bg-card/95 backdrop-blur-md border border-primary/20 rounded-lg shadow-lg">
-                            <div class="flex justify-between items-start mb-2">
-                                <h2 class="text-xl font-headline text-accent">${card.title}</h2>
-                                <span class="text-xs border px-2 py-0.5 rounded uppercase">${State.difficulty}</span>
+                        <div class="h-full flex flex-col p-4 md:p-6 animate-in slide-in-from-bottom-4 fade-in duration-500">
+                            <div class="mb-4">
+                                <span class="text-xs font-bold text-primary tracking-widest uppercase border border-primary/30 px-2 py-1 rounded">
+                                    Turno de: ${currentPlayer?.nickname}
+                                </span>
+                                <h2 class="text-xl md:text-2xl font-headline font-bold text-foreground mt-3 leading-tight">
+                                    ${currentCard.title}
+                                </h2>
                             </div>
-                            <p class="text-sm text-foreground/90 leading-relaxed border-l-4 border-primary/40 pl-3 mb-4 flex-1">
-                                ${card.dilemma}
-                            </p>
-                            <div class="space-y-2 overflow-y-auto max-h-[50vh] md:max-h-none">
-                                ${optionsHTML}
+                            
+                            <div class="flex-1 bg-secondary/20 rounded-lg p-4 mb-4 overflow-y-auto border border-border/50">
+                                <p class="text-sm md:text-base leading-relaxed text-foreground/90 font-serif">
+                                    ${currentCard.dilemma}
+                                </p>
                             </div>
-                            <div class="mt-4 pt-2 border-t border-border/10 text-xs text-center text-muted-foreground">
-                                ${State.ui.isProcessing ? 'Processando...' : 'Sua vez de decidir, Líder.'}
+
+                            <div class="space-y-3">
+                                ${currentCard.options.map((opt, idx) => `
+                                    <button onclick="Game.makeDecision(${idx})" 
+                                        ${!canAct ? 'disabled' : ''}
+                                        class="w-full text-left p-4 rounded-lg border transition-all duration-200 group relative overflow-hidden
+                                        ${canAct 
+                                            ? 'border-border bg-card hover:border-primary hover:bg-secondary/50 cursor-pointer shadow-sm hover:shadow-md' 
+                                            : 'border-border/50 bg-secondary/30 opacity-60 cursor-not-allowed'
+                                        }">
+                                        <div class="relative z-10">
+                                            <span class="font-bold text-sm block mb-1 group-hover:text-primary transition-colors">${opt.text}</span>
+                                            <!-- Efeitos escondidos para dificuldade difícil ou mostrados se configurado -->
+                                            <div class="flex flex-wrap gap-2 text-[10px] opacity-70">
+                                                 ${Object.entries(opt.effect).map(([k,v]) => {
+                                                     const val = v > 0 ? `+${v}` : v;
+                                                     const color = (k === 'hunger' ? v < 0 : v > 0) ? 'text-green-500' : 'text-red-500';
+                                                     return `<span class="${color}">${INDICATORS_INFO[k]?.name || k} ${val}</span>`;
+                                                 }).join('')}
+                                            </div>
+                                        </div>
+                                    </button>
+                                `).join('')}
                             </div>
+                            
+                            ${!isMyTurn ? `
+                                <div class="mt-4 text-center text-xs text-muted-foreground flex items-center justify-center gap-2">
+                                    <i data-lucide="lock" class="w-3 h-3"></i> Aguardando decisão de ${currentPlayer?.nickname}...
+                                </div>
+                            ` : ''}
                         </div>
                     `;
                 };
 
-                const generateLogs = () => {
-                    if (State.session.logs.length === 0) return '<p class="text-center text-muted-foreground text-sm p-4">Nenhum evento registrado.</p>';
+                const buildLogs = () => {
+                    if(!logs.length) return `<div class="p-8 text-center text-muted-foreground text-sm">Nenhum registro histórico.</div>`;
                     return `
-                        <div class="space-y-3 p-3">
-                            ${State.session.logs.slice().reverse().map(log => `
-                                <div class="text-xs p-2 rounded-md bg-secondary/50 border border-border/50">
-                                    <p class="font-bold">Turno ${log.turn}: <span class="text-primary">${log.decision}</span></p>
-                                    <p class="opacity-70 mt-1">${log.effects}</p>
+                        <div class="p-4 space-y-4">
+                            <h3 class="font-headline font-bold text-lg mb-2">Diário da União</h3>
+                            ${logs.slice().reverse().map(l => `
+                                <div class="text-xs p-3 rounded bg-secondary/50 border border-border/50 relative pl-8">
+                                    <div class="absolute left-3 top-3 w-2 h-2 rounded-full bg-primary/50"></div>
+                                    <p class="font-bold text-primary mb-1">${l.playerName} decidiu:</p>
+                                    <p class="mb-1 text-foreground/90">"${l.decision}"</p>
+                                    <p class="text-muted-foreground text-[10px] font-mono">${l.effects}</p>
                                 </div>
                             `).join('')}
                         </div>
                     `;
                 };
 
-                // Inject based on view mode
+                // Inject Content based on Mobile/Desktop
                 const desktopArea = document.getElementById('desktop-decision-area');
-                if (desktopArea) desktopArea.innerHTML = generateDecisionCard();
+                if(desktopArea) desktopArea.innerHTML = buildCard();
 
-                // Mobile Content Switching
                 const mobileArea = document.getElementById('mobile-content-area');
-                const mapEl = document.getElementById('view-map');
-
-                if (mobileArea && window.innerWidth < 768) {
-                    if (mapEl) {
-                        if (State.ui.tab === 'mapa') {
-                            mapEl.classList.remove('hidden');
-                            mobileArea.classList.add('hidden');
-                        } else {
-                            mapEl.classList.add('hidden');
-                            mobileArea.classList.remove('hidden');
-                            
-                            if (State.ui.tab === 'decisao') {
-                                mobileArea.innerHTML = generateDecisionCard();
-                            } else if (State.ui.tab === 'diario') {
-                                mobileArea.innerHTML = generateLogs();
-                            } else if (State.ui.tab === 'nacao') {
-                                mobileArea.innerHTML = `<div class="p-4 space-y-4">${indicatorsHTML}</div>`;
-                            }
-                        }
+                const mapView = document.getElementById('view-map');
+                
+                if(window.innerWidth < 768) {
+                    if (State.ui.tab === 'mapa') {
+                        mapView.classList.remove('hidden');
+                        mobileArea.classList.add('hidden');
+                    } else {
+                        mapView.classList.add('hidden');
+                        mobileArea.classList.remove('hidden');
+                        
+                        if(State.ui.tab === 'decisao') mobileArea.innerHTML = buildCard();
+                        else if(State.ui.tab === 'diario') mobileArea.innerHTML = buildLogs();
+                        else if(State.ui.tab === 'nacao') mobileArea.innerHTML = `<div class="p-4 space-y-6">${buildIndicators()}</div>`;
                     }
                 } else {
-                    // Reset Desktop Visibility
-                    if (mapEl) mapEl.classList.remove('hidden');
+                    mapView.classList.remove('hidden');
                 }
 
-                // Update Mobile Tab Styles
-                document.querySelectorAll('[data-tab]').forEach(btn => {
-                    const isActive = btn.getAttribute('data-tab') === State.ui.tab;
-                    btn.setAttribute('data-active', isActive);
-                    btn.className = `flex flex-col items-center justify-center gap-1 text-xs transition-colors ${isActive ? 'text-primary' : 'text-muted-foreground hover:text-primary'}`;
+                // Nav Styling
+                document.querySelectorAll('.nav-btn').forEach(btn => {
+                    const active = btn.dataset.tab === State.ui.tab;
+                    btn.className = `nav-btn flex flex-col items-center justify-center text-xs transition-colors ${active ? 'text-primary font-bold' : 'text-muted-foreground'}`;
                 });
 
                 lucide.createIcons();
             },
 
-            showEndGame: (message) => {
-                const dialog = document.getElementById('end-game-dialog');
-                document.getElementById('end-game-message').innerText = message;
-                
-                // Simple analysis logic
-                let analysis = "O colapso dos indicadores revela que a negligência com áreas essenciais cria uma sociedade frágil.";
-                if (message.includes('Vitória Coletiva')) {
-                    analysis = "O alto nível dos indicadores mostra como a Educação em Direitos Humanos é a base para uma sociedade justa.";
-                } else if (message.includes('Oportunista')) {
-                    analysis = "A manipulação e a ascensão de interesses particulares minaram o bem-estar coletivo.";
-                }
+            updateButtons: () => {
+                const els = ['btn-create', 'btn-join'];
+                els.forEach(id => {
+                    const btn = document.getElementById(id);
+                    if(btn) {
+                        btn.disabled = State.ui.isProcessing;
+                        btn.innerText = State.ui.isProcessing ? "Carregando..." : (id === 'btn-create' ? "Criar Sala" : "Conectar");
+                    }
+                });
+            },
 
-                document.getElementById('end-game-analysis').innerText = analysis;
-                dialog.classList.remove('hidden');
-                dialog.classList.add('flex');
+            showEndGame: (msg) => {
+                const dlg = document.getElementById('end-game-dialog');
+                document.getElementById('end-game-message').innerText = msg;
+                dlg.classList.remove('hidden');
+                dlg.classList.add('flex');
+                
+                if(State.isCreator) {
+                    document.getElementById('btn-restart').classList.remove('hidden');
+                }
             }
         };
 
-        // --- PUBLIC INTERFACE ---
-        window.Game = {
-            create: () => {
-                const nameInput = document.getElementById('player-name');
-                const diffInput = document.getElementById('difficulty-select');
-                
-                if (!nameInput.value.trim()) {
-                    showToast("Nome inválido", "Por favor, insira seu nome.", "destructive");
-                    return;
-                }
-                
-                State.playerName = nameInput.value;
-                State.difficulty = diffInput.value;
-                State.gameCode = generateId().toUpperCase();
-                
-                GameLogic.startGame();
-            },
-            
-            decide: (index) => {
-                GameLogic.processDecision(index);
-            },
-
-            setTab: (tabName) => {
-                State.ui.tab = tabName;
-                Renderer.updateUI();
-            },
-
-            reset: () => {
-                window.location.reload();
-            }
-        };
-
-        // --- INIT ---
-        Renderer.init();
+        // Initialize
+        Game.init();
 
     </script>
 </body>
