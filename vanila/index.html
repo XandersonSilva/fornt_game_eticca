@@ -34,8 +34,10 @@
                         ring: "hsl(142.1 76.2% 36.3%)",
                         background: "hsl(20 14.3% 4.1%)", // Darker theme default
                         foreground: "hsl(60 9.1% 97.8%)",
-                        primary: { DEFAULT: "#F29F05", foreground: "hsl(355.7 100% 97.3%)" },
-                        secondary: { DEFAULT: "hsl(240 3.7% 15.9%)", foreground: "hsl(0 0% 98%)" },
+                        primary: { DEFAULT: "#D96906", foreground: "hsl(355.7 100% 97.3%)" },
+                        secondary: { DEFAULT: "hsl(240 3.7% 15.9%)", 
+                        foreground: "hsl(0 0% 98%)" },
+                        group: { DEFAULT: "#148038", foreground: "#0A401C" },
                         destructive: { DEFAULT: "hsl(0 62.8% 30.6%)", foreground: "hsl(0 0% 98%)" },
                         muted: { DEFAULT: "hsl(240 3.7% 15.9%)", foreground: "hsl(240 5% 64.9%)" },
                         accent: { DEFAULT: "hsl(12 6.5% 15.1%)", foreground: "hsl(0 0% 98%)" },
@@ -381,18 +383,18 @@
                         
                         <div class="grid md:grid-cols-2 gap-6 w-full">
                             <div class="bg-card/90 backdrop-blur border border-primary/20 rounded-xl shadow-2xl p-6 flex flex-col gap-4">
-                                <h2 class="text-2xl font-headline text-primary text-center">Nova Partida</h2>
+                                <h2 class="text-2xl font-headline text-center">Nova Partida</h2>
                                 <input type="text" id="create-name" placeholder="Seu Nome" value="${State.playerName}" class="flex h-10 w-full rounded-md border border-input bg-background/50 px-3 py-2 text-sm focus:ring-2 focus:ring-primary outline-none">
-                                <button onclick="Game.create()" id="btn-create" class="bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 rounded-md font-medium transition-all">
+                                <button onclick="Game.create()" id="btn-create" class="bg-primary text-primary-foreground hover:bg-secondary/90 h-10 px-4 py-2 rounded-md font-medium transition-all">
                                     Criar Sala
                                 </button>
                             </div>
 
                             <div class="bg-card/90 backdrop-blur border border-white/10 rounded-xl shadow-2xl p-6 flex flex-col gap-4">
                                 <h2 class="text-2xl font-headline text-white text-center">Entrar em Sala</h2>
-                                <input type="text" id="join-name" placeholder="Seu Nome" value="${State.playerName}" class="flex h-10 w-full rounded-md border border-input bg-background/50 px-3 py-2 text-sm focus:ring-2 focus:ring-primary outline-none">
-                                <input type="text" id="join-code" placeholder="CÓDIGO (Ex: X7B9K2)" class="flex h-10 w-full rounded-md border border-input bg-background/50 px-3 py-2 text-sm uppercase focus:ring-2 focus:ring-primary outline-none tracking-widest font-bold text-center">
-                                <button onclick="Game.join()" id="btn-join" class="bg-secondary text-secondary-foreground hover:bg-secondary/80 h-10 px-4 py-2 rounded-md font-medium transition-all">
+                                <input type="text" id="join-name" placeholder="Seu Nome" value="${State.playerName}" class="flex h-10 w-full rounded-md border border-input bg-background/50 px-3 py-2 text-sm focus:ring-2 focus:ring-group outline-none">
+                                <input type="text" id="join-code" placeholder="CÓDIGO (Ex: X7B9K2)" class="flex h-10 w-full rounded-md border border-input bg-background/50 px-3 py-2 text-sm uppercase focus:ring-2 focus:ring-group outline-none tracking-widest font-bold text-center">
+                                <button onclick="Game.join()" id="btn-join" class="bg-group text-secondary-foreground hover:bg-secondary/80 h-10 px-4 py-2 rounded-md font-medium transition-all">
                                     Conectar
                                 </button>
                             </div>
