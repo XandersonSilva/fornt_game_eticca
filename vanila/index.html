@@ -116,12 +116,15 @@
         };
 
         // --- STATE MANAGEMENT ---
+        let State_geral = {};
+
         const State = {
             userUid: null,
             playerName: '',
             gameCode: null,
             isCreator: false,
             pollingInterval: null,
+            dificuty: null,
             
             // Server Data
             serverData: {
@@ -195,6 +198,7 @@
 
             create: async () => {
                 const name = document.getElementById('create-name').value;
+                const dificuty = document.getElementById('difficulty-select').value;
                 if (!name) return showToast("Erro", "Digite seu nome", "destructive");
                 
                 State.playerName = name;
@@ -208,7 +212,7 @@
                     const res = await API.request('/game/create', 'POST', {
                         userUid: State.userUid,
                         playerName: State.playerName,
-                        difficulty: 'easy'
+                        difficulty: dificuty
                     });
                     
                     if (res.success) {
@@ -288,6 +292,7 @@
                         players: data.players || [],
                         currentCard: data.currentCard,
                         logs: data.logs || [],
+                        difficulty: data.difficulty,
                         stats: {
                             economy: data.economy,
                             education: data.education,
@@ -301,6 +306,8 @@
                         game_over_message: data.game_over_message,
                         creator_uid: data.creator_user_uid
                     };
+
+                    
 
                     // Define se sou criador baseado na resposta do servidor (mais seguro)
                     State.isCreator = (State.userUid === data.creator_user_uid);
@@ -321,7 +328,8 @@
                     } else if (State.ui.view === 'waiting') {
                         Renderer.updateWaitingUI();
                     }
-
+                    
+                    State_geral = State.serverData
                 } catch (e) {
                     console.error("Polling error", e);
                 }
@@ -379,6 +387,14 @@
                             <div class="bg-card/90 backdrop-blur border border-primary/20 rounded-xl shadow-2xl p-6 flex flex-col gap-4">
                                 <h2 class="text-2xl font-headline text-primary text-center">Nova Partida</h2>
                                 <input type="text" id="create-name" placeholder="Seu Nome" value="${State.playerName}" class="flex h-10 w-full rounded-md border border-input bg-background/50 px-3 py-2 text-sm focus:ring-2 focus:ring-primary outline-none">
+                                <div class="space-y-2">
+                                    <label class="text-sm font-medium text-center block">Dificuldade</label>
+                                    <select id="difficulty-select" class="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                                        <option value="easy">Fácil</option>
+                                        <option value="medium">Médio</option>
+                                        <option value="hard">Difícil</option>
+                                    </select>
+                                </div>
                                 <button onclick="Game.create()" id="btn-create" class="bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2 rounded-md font-medium transition-all">
                                     Criar Sala
                                 </button>
@@ -626,6 +642,16 @@
                     }
                 }
 
+
+                const showStatus = (opcao) => {
+                    if(State_geral.difficulty !== "easy" ) return '';
+
+                    return Object.entries(opcao.effect).map(([k,v]) => {
+                                                     const val = v > 0 ? `+${v}` : v;
+                                                     const color = (k === 'hunger' ? v < 0 : v > 0) ? 'text-green-500' : 'text-red-500';
+                                                     return `<span class="${color}">${INDICATORS_INFO[k]?.name || k} ${val}</span>`;
+                                                 }).join('')
+                }
                 // 4. Decision / Card Area
                 const buildCard = () => {
                     if (!currentCard) {
@@ -669,11 +695,7 @@
                                             <span class="font-bold text-sm block mb-1 group-hover:text-primary transition-colors">${opt.text}</span>
                                             <!-- Efeitos escondidos para dificuldade difícil ou mostrados se configurado -->
                                             <div class="flex flex-wrap gap-2 text-[10px] opacity-70">
-                                                 ${Object.entries(opt.effect).map(([k,v]) => {
-                                                     const val = v > 0 ? `+${v}` : v;
-                                                     const color = (k === 'hunger' ? v < 0 : v > 0) ? 'text-green-500' : 'text-red-500';
-                                                     return `<span class="${color}">${INDICATORS_INFO[k]?.name || k} ${val}</span>`;
-                                                 }).join('')}
+                                                 ${showStatus(opt)}
                                             </div>
                                         </div>
                                     </button>
