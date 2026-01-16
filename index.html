@@ -16,41 +16,16 @@
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
+    <!-- Módulos JS-->
+    <script src="scripts/moverMapa.js"></script>
+    <script src="scripts/tailwind.js"></script>
+    <script src="scripts/acoesJogo.js"></script>
+
     <style>
         /* Custom styles to match original feeling */
         .boss-battle #bg-layer { filter: sepia(100%) hue-rotate(-50deg) saturate(200%); }
     </style>
-
-    <script>
-        tailwind.config = {
-            darkMode: 'class',
-            theme: {
-                container: { center: true, padding: "2rem", screens: { "2xl": "1400px" } },
-                extend: {
-                    fontFamily: { body: ['Lora', 'serif'], headline: ['Playfair Display', 'serif'] },
-                    colors: {
-                        border: "hsl(240 5.9% 90%)",
-                        input: "hsl(240 5.9% 90%)",
-                        ring: "hsl(142.1 76.2% 36.3%)",
-                        background: "hsl(20 14.3% 4.1%)", // Darker theme default
-                        foreground: "hsl(60 9.1% 97.8%)",
-                        primary: { DEFAULT: "#D96906", foreground: "hsl(355.7 100% 97.3%)" },
-                        secondary: { DEFAULT: "hsl(240 3.7% 15.9%)", 
-                        foreground: "hsl(0 0% 98%)" },
-                        group: { DEFAULT: "#148038", foreground: "#0A401C" },
-                        destructive: { DEFAULT: "hsl(0 62.8% 30.6%)", foreground: "hsl(0 0% 98%)" },
-                        muted: { DEFAULT: "hsl(240 3.7% 15.9%)", foreground: "hsl(240 5% 64.9%)" },
-                        accent: { DEFAULT: "hsl(12 6.5% 15.1%)", foreground: "hsl(0 0% 98%)" },
-                        popover: { DEFAULT: "hsl(20 14.3% 4.1%)", foreground: "hsl(60 9.1% 97.8%)" },
-                        card: { DEFAULT: "hsl(24 9.8% 10%)", foreground: "hsl(60 9.1% 97.8%)" },
-                    },
-                    borderRadius: { lg: "0.5rem", md: "calc(0.5rem - 2px)", sm: "calc(0.5rem - 4px)" },
-                }
-            }
-        }
-
-        
-    </script>
+    
 </head>
 <body class="font-body antialiased min-h-screen flex flex-col bg-background text-foreground">
 
@@ -71,9 +46,6 @@
             </div>
             
             <div class="p-6 pt-0 flex justify-end gap-2">
-                <button onclick="Game.restart()" id="btn-restart" class="hidden inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2">
-                    <i data-lucide="rotate-ccw" class="w-4 h-4"></i> Reiniciar (Criador)
-                </button>
                 <button onclick="location.reload()" class="inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium border border-input bg-secondary hover:bg-secondary/80 h-10 px-4 py-2">
                     Sair
                 </button>
@@ -87,117 +59,7 @@
         const API_URL = "https://brasil-em-pauta.onrender.com";
         // --- MAP CONTROLS (ZOOM & PAN) ---
         // --- MAP CONTROLS (ZOOM & PAN) ---
-        const MapControls = {
-            // O estado fica definido aqui fora para não ser resetado
-            state: {
-                scale: 1,
-                panning: false,
-                pointX: 0,
-                pointY: 0,
-                startX: 0,
-                startY: 0,
-                cssX: 0,
-                cssY: 0
-            },
-            
-            init: () => {
-                const view = document.getElementById('view-map');
-                const target = document.getElementById('game-board-container');
-                
-                if (!view || !target) return;
-
-                // REMOVIDO: A linha que resetava o estado (MapControls.state = { ... })
-                // ADICIONADO: Aplica o estado atual (memória) ao novo elemento HTML
-                MapControls.update(target);
-
-                // Mouse Events (Desktop)
-                view.onmousedown = function (e) {
-                    e.preventDefault();
-                    MapControls.state.startX = e.clientX - MapControls.state.pointX;
-                    MapControls.state.startY = e.clientY - MapControls.state.pointY;
-                    MapControls.state.panning = true;
-                };
-
-                view.onmouseup = function (e) {
-                    MapControls.state.panning = false;
-                };
-
-                view.onmousemove = function (e) {
-                    e.preventDefault();
-                    if (!MapControls.state.panning) return;
-                    MapControls.state.pointX = (e.clientX - MapControls.state.startX);
-                    MapControls.state.pointY = (e.clientY - MapControls.state.startY);
-                    MapControls.update(target);
-                };
-
-                // Touch Events (Mobile)
-                let initialPinchDistance = null;
-                let initialScale = 1;
-
-                view.addEventListener('touchstart', function(e) {
-                    if (e.touches.length === 1) {
-                        MapControls.state.panning = true;
-                        MapControls.state.startX = e.touches[0].clientX - MapControls.state.pointX;
-                        MapControls.state.startY = e.touches[0].clientY - MapControls.state.pointY;
-                    } else if (e.touches.length === 2) {
-                        MapControls.state.panning = false;
-                        initialPinchDistance = Math.hypot(
-                            e.touches[0].pageX - e.touches[1].pageX,
-                            e.touches[0].pageY - e.touches[1].pageY
-                        );
-                        initialScale = MapControls.state.scale;
-                    }
-                }, { passive: false });
-
-                view.addEventListener('touchmove', function(e) {
-                    e.preventDefault();
-                    
-                    if (e.touches.length === 1 && MapControls.state.panning) {
-                        MapControls.state.pointX = (e.touches[0].clientX - MapControls.state.startX);
-                        MapControls.state.pointY = (e.touches[0].clientY - MapControls.state.startY);
-                        MapControls.update(target);
-                    } else if (e.touches.length === 2 && initialPinchDistance) {
-                        const currentDistance = Math.hypot(
-                            e.touches[0].pageX - e.touches[1].pageX,
-                            e.touches[0].pageY - e.touches[1].pageY
-                        );
-                        
-                        const diff = currentDistance - initialPinchDistance;
-                        const newScale = initialScale + (diff * 0.005);
-                        
-                        MapControls.zoom(newScale);
-                    }
-                }, { passive: false });
-                
-                view.addEventListener('touchend', () => {
-                    MapControls.state.panning = false;
-                    initialPinchDistance = null;
-                });
-            },
-
-            zoom: (newScale) => {
-                const target = document.getElementById('game-board-container');
-                // Agora aceita zoom se o target existir, se não, salva no estado mesmo assim
-                MapControls.state.scale = Math.min(Math.max(1, newScale), 4);
-                if(target) MapControls.update(target);
-            },
-
-            zoomIn: () => MapControls.zoom(MapControls.state.scale + 0.5),
-            zoomOut: () => MapControls.zoom(MapControls.state.scale - 0.5),
-            
-            // Botão de reset manual (para o jogador usar se quiser)
-            reset: () => {
-                MapControls.state.scale = 1;
-                MapControls.state.pointX = 0;
-                MapControls.state.pointY = 0;
-                const target = document.getElementById('game-board-container');
-                if(target) MapControls.update(target);
-            },
-
-            update: (target) => {
-                target.style.transform = `translate(${MapControls.state.pointX}px, ${MapControls.state.pointY}px) scale(${MapControls.state.scale})`;
-            }
-        };
+        
         
         // Mantendo as coordenadas visuais dos tiles (Client-Side)
         const TILES = [
@@ -305,187 +167,7 @@
         };
 
         // --- GAME ACTIONS ---
-        const Game = {
-            init: () => {
-                State.userUid = getOrSetUid();
-                const storedName = localStorage.getItem('bp_player_name');
-                if (storedName) State.playerName = storedName;
-                Renderer.renderLobby();
-            },
-
-            create: async () => {
-                const name = document.getElementById('create-name').value;
-                const dificuty = document.getElementById('difficulty-select').value;
-                if (!name) return showToast("Erro", "Digite seu nome", "destructive");
-                
-                State.playerName = name;
-                localStorage.setItem('bp_player_name', name);
-                State.isCreator = true;
-
-                try {
-                    State.ui.isProcessing = true;
-                    Renderer.updateButtons();
-                    
-                    const res = await API.request('/game/create', 'POST', {
-                        userUid: State.userUid,
-                        playerName: State.playerName,
-                        difficulty: dificuty
-                    });
-                    
-                    if (res.success) {
-                        State.gameCode = res.gameCode;
-                        Game.startPolling();
-                        Renderer.renderWaitingRoom();
-                    }
-                } catch (e) {
-                    // Toast handled by API wrapper
-                } finally {
-                    State.ui.isProcessing = false;
-                    Renderer.updateButtons();
-                }
-            },
-
-            join: async () => {
-                const name = document.getElementById('join-name').value;
-                const code = document.getElementById('join-code').value.toUpperCase();
-                
-                if (!name || !code) return showToast("Erro", "Preencha nome e código", "destructive");
-
-                State.playerName = name;
-                localStorage.setItem('bp_player_name', name);
-                State.isCreator = false;
-
-                try {
-                    State.ui.isProcessing = true;
-                    Renderer.updateButtons();
-
-                    const res = await API.request('/game/join', 'POST', {
-                        gameCode: code,
-                        userUid: State.userUid,
-                        playerName: State.playerName
-                    });
-
-                    if (res.success) {
-                        State.gameCode = code;
-                        Game.startPolling();
-                        Renderer.renderWaitingRoom();
-                    }
-                } catch (e) {
-                    // Toast handled
-                } finally {
-                    State.ui.isProcessing = false;
-                    Renderer.updateButtons();
-                }
-            },
-
-            startGame: async () => {
-                try {
-                    await API.request('/game/start', 'POST', { gameCode: State.gameCode });
-                    // Polling vai pegar a mudança de status e renderizar o jogo
-                } catch (e) {}
-            },
-
-            startPolling: () => {
-                if (State.pollingInterval) clearInterval(State.pollingInterval);
-                
-                // Primeira chamada imediata
-                Game.fetchState();
-
-                State.pollingInterval = setInterval(async () => {
-                    await Game.fetchState();
-                }, 2000);
-            },
-
-            fetchState: async () => {
-                try {
-                    const data = await API.request(`/game/${State.gameCode}`, 'GET');
-                    
-                    // Verifica mudança de estado para renderizar a view correta
-                    const prevStatus = State.serverData.status;
-                    
-                    // Mapeia resposta da API para State
-                    State.serverData = {
-                        status: data.status,
-                        players: data.players || [],
-                        currentCard: data.currentCard,
-                        logs: data.logs || [],
-                        difficulty: data.difficulty,
-                        stats: {
-                            economy: data.economy,
-                            education: data.education,
-                            wellbeing: data.wellbeing,
-                            popular_support: data.popular_support,
-                            hunger: data.hunger,
-                            military_religion: data.military_religion
-                        },
-                        board_position: data.board_position,
-                        current_player_index: data.current_player_index,
-                        game_over_message: data.game_over_message,
-                        creator_uid: data.creator_user_uid
-                    };
-
-                    
-
-                    // Define se sou criador baseado na resposta do servidor (mais seguro)
-                    State.isCreator = (State.userUid === data.creator_user_uid);
-
-                    // Lógica de navegação de telas
-                    if (State.serverData.status === 'in_progress' && State.ui.view !== 'game') {
-                        State.ui.view = 'game';
-                        Renderer.renderGame();
-                    } else if (State.serverData.status === 'finished') {
-                        Renderer.showEndGame(State.serverData.game_over_message);
-                    } else if (State.serverData.status === 'waiting' && State.ui.view === 'lobby') {
-                        // Se por acaso caiu aqui sem passar pelo create/join manual
-                         Renderer.renderWaitingRoom();
-                    }
-
-                    if (State.ui.view === 'game') {
-                        Renderer.updateGameUI();
-                    } else if (State.ui.view === 'waiting') {
-                        Renderer.updateWaitingUI();
-                    }
-                    
-                    State_geral = State.serverData
-                } catch (e) {
-                    console.error("Polling error", e);
-                }
-            },
-
-            makeDecision: async (choiceIndex) => {
-                try {
-                    State.ui.isProcessing = true;
-                    Renderer.updateGameUI(); // Desabilita botões visualmente
-
-                    await API.request('/game/decision', 'POST', {
-                        gameCode: State.gameCode,
-                        userUid: State.userUid,
-                        choice: choiceIndex
-                    });
-                    
-                    // Polling vai atualizar o resto
-                } catch (e) {
-                } finally {
-                    State.ui.isProcessing = false;
-                }
-            },
-
-            restart: async () => {
-                try {
-                    await API.request('/game/restart', 'POST', {
-                        gameCode: State.gameCode,
-                        userUid: State.userUid
-                    });
-                    document.getElementById('end-game-dialog').classList.add('hidden');
-                    document.getElementById('end-game-dialog').classList.remove('flex');
-                } catch (e) {}
-            },
-
-            setTab: (tab) => {
-                State.ui.tab = tab;
-                Renderer.updateGameUI();
-            }
-        };
+        
 
         // --- RENDERER ---
         const Renderer = {
@@ -731,9 +413,9 @@
                     // Lógica visual simples baseada em status
                     const isChaos = stats.popular_support <= 2 || stats.economy <= 2;
                     const isGood = stats.wellbeing >= 7 && stats.education >= 7;
-                    let bgSrc = 'https://i.ibb.co/0ykrc3cK/TABULEIRO-0001903.png';
-                    if (isChaos) bgSrc = 'https://i.ibb.co/5Xk4qFY3/TABULEIRO-0001908.png';
-                    else if (isGood) bgSrc = 'https://i.ibb.co/Hpk9ByxC/TABULEIRO-0001918.png';
+                    let bgSrc =              "img/TABULEIRO_0001903.png";
+                    if (isChaos) bgSrc =     "img/TABULEIRO_0001909.png";
+                    else if (isGood) bgSrc = "img/TABULEIRO_0001918.png";
                     bgLayer.style.backgroundImage = `url('${bgSrc}')`;
                 }
 
