@@ -9,6 +9,7 @@ const Game = {
     create: async () => {
         const name = document.getElementById('create-name').value;
         const dificuty = document.getElementById('difficulty-select').value;
+        const observer = document.getElementById("observer").checked;
         if (!name) return showToast("Erro", "Digite seu nome", "destructive");
         
         State.playerName = name;
@@ -22,7 +23,8 @@ const Game = {
             const res = await API.request('/game/create', 'POST', {
                 userUid: State.userUid,
                 playerName: State.playerName,
-                difficulty: dificuty
+                difficulty: dificuty,
+                isObserver: observer
             });
             
             if (res.success) {

@@ -53,7 +53,7 @@
             </div>
         </div>
     </div>
-
+    
     <!-- SCRIPTS -->
     <script>
         // --- CONSTANTS & CONFIG ---
@@ -192,12 +192,16 @@
                                 <h2 class="text-2xl font-headline text-center">Nova Partida</h2>
                                 <input type="text" id="create-name" placeholder="Seu Nome" value="${State.playerName}" class="flex h-10 w-full rounded-md border border-input bg-background/50 px-3 py-2 text-sm focus:ring-2 focus:ring-primary outline-none">
                                 <div class="space-y-2">
-                                    <label class="text-sm font-medium text-center block">Dificuldade</label>
+                                    <h1 class="text-xl text-center block">Dificuldade</h1>
                                     <select id="difficulty-select" class="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
                                         <option value="easy">Fácil</option>
                                         <option value="medium">Médio</option>
                                         <option value="hard">Difícil</option>
                                     </select>
+                                </div>
+                                <div>
+                                    <input type="checkbox" name="observer" id="observer">
+                                    <label for="observer">Quero ser somente um observador</label>
                                 </div>
                                 <button onclick="Game.create()" id="btn-create" class="bg-primary text-primary-foreground hover:bg-secondary/90 h-10 px-4 py-2 rounded-md font-medium transition-all">
                                     Criar Sala
