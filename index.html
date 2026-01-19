@@ -385,25 +385,37 @@
                     `).join('');
                 }
 
-                // 2. Indicators HTML Builder
+                // 2. Indicators HTML Builder (COM CEGUEIRA NO HARD MODE)
                 const buildIndicators = () => Object.entries(stats).map(([key, value]) => {
                     if(!INDICATORS_INFO[key]) return '';
                     const info = INDICATORS_INFO[key];
+                    
+                    // Lógica de Cores
                     let color = "bg-yellow-500";
                     if (key === 'hunger') {
                         color = value >= 7 ? "bg-red-600" : (value >= 4 ? "bg-yellow-500" : "bg-emerald-500");
                     } else {
                         color = value <= 3 ? "bg-red-600" : (value <= 6 ? "bg-yellow-500" : "bg-emerald-500");
                     }
-                    
+
+                    // --- NOVA LÓGICA: VERIFICAR DIFICULDADE ---
+                    const isHard = State.serverData.difficulty === 'hard'; 
+
+                    // 1. Esconde o número
+                    const displayValue = isHard ? "---" : value;
+
+                    // Se for Hard, a barra fica sempre em 100% (cheia), mudando apenas a cor.
+                    // Se for Normal, a barra respeita a porcentagem do valor (ex: 3 = 30%).
+                    const barWidth = isHard ? "100" : (value * 10); 
+
                     return `
                         <div class="flex flex-col gap-1">
                             <div class="flex justify-between text-xs font-medium text-muted-foreground uppercase tracking-wider">
                                 <span class="flex items-center gap-1"><i data-lucide="${info.icon}" class="w-3 h-3"></i> ${info.name}</span>
-                                <span class="text-foreground">${value}</span>
+                                <span class="text-foreground font-bold">${displayValue}</span>
                             </div>
                             <div class="h-1.5 w-full bg-secondary rounded-full overflow-hidden">
-                                <div class="h-full ${color} transition-all duration-700" style="width: ${value * 10}%"></div>
+                                <div class="h-full ${color} transition-all duration-700" style="width: ${barWidth}%"></div>
                             </div>
                         </div>
                     `;
@@ -415,12 +427,21 @@
                 // 3. Board Visuals
                 const bgLayer = document.getElementById('bg-layer');
                 if (bgLayer) {
-                    // Lógica visual simples baseada em status
-                    const isChaos = stats.popular_support <= 2 || stats.economy <= 2;
+                    // Lógica visual baseada em status
+                    const isChaos = stats.popular_support <= 3 || stats.economy <= 3 || stats.wellbeing <= 3;
                     const isGood = stats.wellbeing >= 7 && stats.education >= 7;
-                    let bgSrc =              "img/TABULEIRO_0001903.png";
-                    if (isChaos) bgSrc =     "img/TABULEIRO_0001909.png";
-                    else if (isGood) bgSrc = "img/TABULEIRO_0001918.png";
+
+                    // Imagem Padrão (Neutra) - Usada no modo fácil/médio no início
+                    let bgSrc = "img/TABULEIRO_0001903.png"; 
+
+                    if (isChaos) {
+                        // Imagem de País Devastado
+                        bgSrc = "img/TABULEIRO_0001908.png"; 
+                    } else if (isGood) {
+                        // Imagem de País Próspero
+                        bgSrc = "img/TABULEIRO_0001918.png"; 
+                    }
+
                     bgLayer.style.backgroundImage = `url('${bgSrc}')`;
                 }
 

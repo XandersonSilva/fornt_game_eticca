@@ -8,23 +8,37 @@ const Game = {
 
     create: async () => {
         const name = document.getElementById('create-name').value;
-        const dificuty = document.getElementById('difficulty-select').value;
+        const difficulty = document.getElementById('difficulty-select').value; // Corrigido typo 'dificuty'
         const observer = document.getElementById("observer").checked;
+        
         if (!name) return showToast("Erro", "Digite seu nome", "destructive");
         
         State.playerName = name;
         localStorage.setItem('bp_player_name', name);
         State.isCreator = true;
 
+        // --- NOVA LÓGICA: DEFINIR STATUS INICIAIS ---
+        let initialStats = {};
+        if (difficulty === 'hard') {
+            // Modo Crise: Tudo 3, Fome 0
+            initialStats = { economy: 3, education: 3, wellbeing: 3, popular_support: 3, military_religion: 3, hunger: 0 };
+        } else {
+            // Modo Normal: Tudo 6, Fome 0
+            initialStats = { economy: 6, education: 6, wellbeing: 6, popular_support: 6, military_religion: 6, hunger: 0 };
+        }
+        // --------------------------------------------
+
         try {
             State.ui.isProcessing = true;
             Renderer.updateButtons();
             
+            // Enviamos 'initialStats' junto com a dificuldade
             const res = await API.request('/game/create', 'POST', {
                 userUid: State.userUid,
                 playerName: State.playerName,
-                difficulty: dificuty,
-                isObserver: observer
+                difficulty: difficulty,
+                isObserver: observer,
+                initialStats: initialStats // O Backend precisa aceitar este campo
             });
             
             if (res.success) {
