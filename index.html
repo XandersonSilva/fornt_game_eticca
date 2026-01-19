@@ -1,19 +1,22 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Brasil em Pauta - Online</title>
-    
+
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="shortcut icon" href="img/favicon.png" type="image/png">
-    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
-    
+    <link
+        href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400&family=Playfair+Display:wght@400;700&display=swap"
+        rel="stylesheet">
+
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    
+
     <!-- Lucide Icons -->
     <script src="https://unpkg.com/lucide@latest"></script>
 
@@ -24,10 +27,15 @@
 
     <style>
         /* Custom styles to match original feeling */
-        .boss-battle #bg-layer { filter: sepia(100%) hue-rotate(-50deg) saturate(200%); }
+        .boss-battle #bg-layer {
+            filter: sepia(100%) hue-rotate(-50deg) saturate(200%);
+        }
     </style>
-    
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
+
+
 <body class="font-body antialiased min-h-screen flex flex-col bg-background text-foreground">
 
     <!-- TOAST CONTAINER -->
@@ -40,28 +48,41 @@
 
     <!-- DIALOG (END GAME) -->
     <div id="end-game-dialog" class="fixed inset-0 z-50 bg-black/80 hidden items-center justify-center p-4">
-        <div class="bg-card border border-border rounded-lg shadow-lg w-full max-w-lg overflow-hidden flex flex-col max-h-[90vh]">
+        <div
+            class="bg-card border border-border rounded-lg shadow-lg w-full max-w-lg overflow-hidden flex flex-col max-h-[90vh]">
             <div class="p-6 pb-2">
                 <h2 class="text-2xl font-headline font-semibold text-primary">Fim de Jogo!</h2>
-                <p id="end-game-message" class="text-muted-foreground mt-2"></p>
+                <p id="end-game-message" class="text-muted-foreground mt-2 mb-4"></p>
+
+                <div class="w-full h-48 bg-white/5 rounded p-2">
+                    <canvas id="educationChart"></canvas>
+                </div>
             </div>
-            
-            <div class="p-6 pt-0 flex justify-end gap-2">
-                <button onclick="location.reload()" class="inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium border border-input bg-secondary hover:bg-secondary/80 h-10 px-4 py-2">
+
+            <div class="p-6 pt-0 flex justify-end gap-2 mt-4">
+                <button id="btn-restart" onclick="Game.restart()"
+                    class="hidden inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 h-10 px-4 py-2">
+                    Reiniciar
+                </button>
+                <button onclick="location.reload()"
+                    class="inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium border border-input bg-secondary hover:bg-secondary/80 h-10 px-4 py-2">
                     Sair
                 </button>
             </div>
         </div>
     </div>
-    
+
     <!-- SCRIPTS -->
     <script>
         // --- CONSTANTS & CONFIG ---
-        const API_URL = "https://brasil-em-pauta.onrender.com";
+        // const API_URL = "https://brasil-em-pauta.onrender.com";
+        const API_URL = (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')
+            ? "http://localhost:3000"
+            : "https://brasil-em-pauta.onrender.com";
         // --- MAP CONTROLS (ZOOM & PAN) ---
         // --- MAP CONTROLS (ZOOM & PAN) ---
-        
-        
+
+
         // Mantendo as coordenadas visuais dos tiles (Client-Side)
         const TILES = [
             { id: 1, label: "1", top: 22, left: 23 }, { id: 2, label: "2", top: 32, left: 13 },
@@ -105,7 +126,7 @@
             isCreator: false,
             pollingInterval: null,
             dificuty: null,
-            
+
             // Server Data
             serverData: {
                 status: 'waiting', // waiting, in_progress, finished
@@ -116,7 +137,7 @@
                 board_position: 0,
                 current_player_index: 0
             },
-            
+
             ui: {
                 tab: 'decisao',
                 isProcessing: false,
@@ -153,10 +174,10 @@
                         headers: { 'Content-Type': 'application/json' }
                     };
                     if (body) options.body = JSON.stringify(body);
-                    
+
                     const res = await fetch(`${API_URL}${endpoint}`, options);
                     const data = await res.json();
-                    
+
                     if (!res.ok) throw new Error(data.message || 'Erro na requisição');
                     return data;
                 } catch (error) {
@@ -168,7 +189,7 @@
         };
 
         // --- GAME ACTIONS ---
-        
+
 
         // --- RENDERER ---
         const Renderer = {
@@ -258,7 +279,7 @@
 
             updateWaitingUI: () => {
                 const list = document.getElementById('player-list');
-                if(!list) return;
+                if (!list) return;
 
                 list.innerHTML = State.serverData.players.map(p => `
                     <div class="flex items-center justify-between p-3 bg-secondary rounded-md border border-transparent ${p.user_uid === State.userUid ? 'border-primary/50' : ''}">
@@ -271,7 +292,7 @@
                         ${p.user_uid === State.serverData.creator_uid ? '<i data-lucide="crown" class="h-4 w-4 text-yellow-500"></i>' : ''}
                     </div>
                 `).join('');
-                
+
                 lucide.createIcons();
 
                 const creatorControls = document.getElementById('creator-controls');
@@ -368,7 +389,7 @@
             },
 
             updateGameUI: () => {
-                if(!State.serverData) return;
+                if (!State.serverData) return;
 
                 const { stats, board_position, currentCard, players, current_player_index, logs } = State.serverData;
                 const currentPlayer = players[current_player_index];
@@ -376,7 +397,7 @@
 
                 // 1. Header Players
                 const headerPlayers = document.getElementById('header-players');
-                if(headerPlayers) {
+                if (headerPlayers) {
                     headerPlayers.innerHTML = players.map((p, idx) => `
                         <div class="relative h-8 w-8 rounded-full border-2 ${idx === current_player_index ? 'border-primary z-10 scale-110' : 'border-background bg-muted'} flex items-center justify-center text-xs font-bold text-foreground bg-secondary" title="${p.nickname}">
                             ${p.nickname.charAt(0)}
@@ -387,9 +408,9 @@
 
                 // 2. Indicators HTML Builder (COM CEGUEIRA NO HARD MODE)
                 const buildIndicators = () => Object.entries(stats).map(([key, value]) => {
-                    if(!INDICATORS_INFO[key]) return '';
+                    if (!INDICATORS_INFO[key]) return '';
                     const info = INDICATORS_INFO[key];
-                    
+
                     // Lógica de Cores
                     let color = "bg-yellow-500";
                     if (key === 'hunger') {
@@ -399,14 +420,14 @@
                     }
 
                     // --- NOVA LÓGICA: VERIFICAR DIFICULDADE ---
-                    const isHard = State.serverData.difficulty === 'hard'; 
+                    const isHard = State.serverData.difficulty === 'hard';
 
                     // 1. Esconde o número
                     const displayValue = isHard ? "---" : value;
 
                     // Se for Hard, a barra fica sempre em 100% (cheia), mudando apenas a cor.
                     // Se for Normal, a barra respeita a porcentagem do valor (ex: 3 = 30%).
-                    const barWidth = isHard ? "100" : (value * 10); 
+                    const barWidth = isHard ? "100" : (value * 10);
 
                     return `
                         <div class="flex flex-col gap-1">
@@ -422,7 +443,7 @@
                 }).join('');
 
                 const deskInd = document.getElementById('desktop-indicators');
-                if(deskInd) deskInd.innerHTML = buildIndicators();
+                if (deskInd) deskInd.innerHTML = buildIndicators();
 
                 // 3. Board Visuals
                 const bgLayer = document.getElementById('bg-layer');
@@ -432,14 +453,14 @@
                     const isGood = stats.wellbeing >= 7 && stats.education >= 7;
 
                     // Imagem Padrão (Neutra) - Usada no modo fácil/médio no início
-                    let bgSrc = "img/TABULEIRO_0001903.png"; 
+                    let bgSrc = "img/TABULEIRO_0001903.png";
 
                     if (isChaos) {
                         // Imagem de País Devastado
-                        bgSrc = "img/TABULEIRO_0001908.png"; 
+                        bgSrc = "img/TABULEIRO_0001908.png";
                     } else if (isGood) {
                         // Imagem de País Próspero
-                        bgSrc = "img/TABULEIRO_0001918.png"; 
+                        bgSrc = "img/TABULEIRO_0001918.png";
                     }
 
                     bgLayer.style.backgroundImage = `url('${bgSrc}')`;
@@ -450,10 +471,10 @@
                     tilesLayer.innerHTML = TILES.map(tile => {
                         // API retorna board_position 0-25. Tile ID 1 map to pos 1.
                         const isCurrent = tile.id === board_position;
-                        const activeClass = isCurrent ? 
-                            "scale-150 border-yellow-400 z-20 shadow-[0_0_15px_rgba(250,204,21,0.6)] bg-yellow-600 text-white" : 
+                        const activeClass = isCurrent ?
+                            "scale-150 border-yellow-400 z-20 shadow-[0_0_15px_rgba(250,204,21,0.6)] bg-yellow-600 text-white" :
                             "bg-black/40 border-white/30 text-white/50";
-                        
+
                         return `
                             <div class="absolute w-[3.5%] h-[4.5%] flex justify-center items-center rounded-full text-[10px] font-bold border transition-all duration-500 ${activeClass}" 
                             style="top: ${tile.top}%; left: ${tile.left}%;">
@@ -484,13 +505,13 @@
 
 
                 const showStatus = (opcao) => {
-                    if(State_geral.difficulty !== "easy" ) return '';
+                    if (State_geral.difficulty !== "easy") return '';
 
-                    return Object.entries(opcao.effect).map(([k,v]) => {
-                                                     const val = v > 0 ? `+${v}` : v;
-                                                     const color = (k === 'hunger' ? v < 0 : v > 0) ? 'text-green-500' : 'text-red-500';
-                                                     return `<span class="${color}">${INDICATORS_INFO[k]?.name || k} ${val}</span>`;
-                                                 }).join('')
+                    return Object.entries(opcao.effect).map(([k, v]) => {
+                        const val = v > 0 ? `+${v}` : v;
+                        const color = (k === 'hunger' ? v < 0 : v > 0) ? 'text-green-500' : 'text-red-500';
+                        return `<span class="${color}">${INDICATORS_INFO[k]?.name || k} ${val}</span>`;
+                    }).join('')
                 }
                 // 4. Decision / Card Area
                 const buildCard = () => {
@@ -527,10 +548,10 @@
                                     <button onclick="Game.makeDecision(${idx})" 
                                         ${!canAct ? 'disabled' : ''}
                                         class="w-full text-left p-4 rounded-lg border transition-all duration-200 group relative overflow-hidden
-                                        ${canAct 
-                                            ? 'border-border bg-card hover:border-primary hover:bg-secondary/50 cursor-pointer shadow-sm hover:shadow-md' 
-                                            : 'border-border/50 bg-secondary/30 opacity-60 cursor-not-allowed'
-                                        }">
+                                        ${canAct
+                            ? 'border-border bg-card hover:border-primary hover:bg-secondary/50 cursor-pointer shadow-sm hover:shadow-md'
+                            : 'border-border/50 bg-secondary/30 opacity-60 cursor-not-allowed'
+                        }">
                                         <div class="relative z-10">
                                             <span class="font-bold text-sm block mb-1 group-hover:text-primary transition-colors">${opt.text}</span>
                                             <!-- Efeitos escondidos para dificuldade difícil ou mostrados se configurado -->
@@ -552,7 +573,7 @@
                 };
 
                 const buildLogs = () => {
-                    if(!logs.length) return `<div class="p-8 text-center text-muted-foreground text-sm">Nenhum registro histórico.</div>`;
+                    if (!logs.length) return `<div class="p-8 text-center text-muted-foreground text-sm">Nenhum registro histórico.</div>`;
                     return `
                         <div class="p-4 space-y-4">
                             <h3 class="font-headline font-bold text-lg mb-2">Diário da União</h3>
@@ -570,22 +591,22 @@
 
                 // Inject Content based on Mobile/Desktop
                 const desktopArea = document.getElementById('desktop-decision-area');
-                if(desktopArea) desktopArea.innerHTML = buildCard();
+                if (desktopArea) desktopArea.innerHTML = buildCard();
 
                 const mobileArea = document.getElementById('mobile-content-area');
                 const mapView = document.getElementById('view-map');
-                
-                if(window.innerWidth < 768) {
+
+                if (window.innerWidth < 768) {
                     if (State.ui.tab === 'mapa') {
                         mapView.classList.remove('hidden');
                         mobileArea.classList.add('hidden');
                     } else {
                         mapView.classList.add('hidden');
                         mobileArea.classList.remove('hidden');
-                        
-                        if(State.ui.tab === 'decisao') mobileArea.innerHTML = buildCard();
-                        else if(State.ui.tab === 'diario') mobileArea.innerHTML = buildLogs();
-                        else if(State.ui.tab === 'nacao') mobileArea.innerHTML = `<div class="p-4 space-y-6">${buildIndicators()}</div>`;
+
+                        if (State.ui.tab === 'decisao') mobileArea.innerHTML = buildCard();
+                        else if (State.ui.tab === 'diario') mobileArea.innerHTML = buildLogs();
+                        else if (State.ui.tab === 'nacao') mobileArea.innerHTML = `<div class="p-4 space-y-6">${buildIndicators()}</div>`;
                     }
                 } else {
                     mapView.classList.remove('hidden');
@@ -600,14 +621,14 @@
                 lucide.createIcons();
                 // INICIALIZA O ZOOM
                 setTimeout(() => MapControls.init(), 100);
-               
+
             },
 
             updateButtons: () => {
                 const els = ['btn-create', 'btn-join'];
                 els.forEach(id => {
                     const btn = document.getElementById(id);
-                    if(btn) {
+                    if (btn) {
                         btn.disabled = State.ui.isProcessing;
                         btn.innerText = State.ui.isProcessing ? "Carregando..." : (id === 'btn-create' ? "Criar Sala" : "Conectar");
                     }
@@ -619,10 +640,73 @@
                 document.getElementById('end-game-message').innerText = msg;
                 dlg.classList.remove('hidden');
                 dlg.classList.add('flex');
-                
-                if(State.isCreator) {
-                    document.getElementById('btn-restart').classList.remove('hidden');
+
+                if (State.isCreator) {
+                    const btnRestart = document.getElementById('btn-restart');
+                    if (btnRestart) btnRestart.classList.remove('hidden');
                 }
+
+                // --- GRÁFICO ATUALIZADO ---
+                // Pega o histórico do servidor (se não tiver, usa fallback)
+                const history = State.serverData.education_history || [5];
+                const labels = history.map((_, i) => `Turno ${i}`);
+
+                // Define a cor: Verde se subiu, Vermelho se caiu/manteve baixo
+                const startVal = history[0];
+                const endVal = history[history.length - 1];
+                const isPositive = endVal > startVal;
+
+                // Cores Tailwind: Emerald-500 (#10b981) ou Red-500 (#ef4444)
+                const lineColor = isPositive ? '#10b981' : '#ef4444';
+                const areaColor = isPositive ? 'rgba(16, 185, 129, 0.2)' : 'rgba(239, 68, 68, 0.2)';
+
+                const ctx = document.getElementById('educationChart').getContext('2d');
+
+                if (window.myEndChart) window.myEndChart.destroy();
+
+                window.myEndChart = new Chart(ctx, {
+                    type: 'line',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Educação & Consciência Crítica',
+                            data: history,
+                            borderColor: lineColor,
+                            backgroundColor: areaColor,
+                            borderWidth: 3,
+                            tension: 0.3, // Curva suave
+                            fill: true,
+                            pointRadius: 4,
+                            pointBackgroundColor: lineColor
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            y: {
+                                beginAtZero: true,
+                                max: 10,
+                                grid: { color: 'rgba(255,255,255,0.1)' },
+                                ticks: { color: '#aaa' }
+                            },
+                            x: {
+                                grid: { display: false },
+                                ticks: { color: '#aaa' }
+                            }
+                        },
+                        plugins: {
+                            legend: {
+                                labels: { color: '#fff', font: { family: 'Lora' } }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: (ctx) => `Educação: ${ctx.raw}`
+                                }
+                            }
+                        }
+                    }
+                });
             }
         };
 
@@ -631,4 +715,5 @@
 
     </script>
 </body>
+
 </html>
