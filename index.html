@@ -193,7 +193,7 @@
                                 <input type="text" id="create-name" placeholder="Seu Nome" value="${State.playerName}" class="flex h-10 w-full rounded-md border border-input bg-background/50 px-3 py-2 text-sm focus:ring-2 focus:ring-primary outline-none">
                                 <div class="space-y-2">
                                     <h1 class="text-xl text-center block">Dificuldade</h1>
-                                    <select id="difficulty-select" class="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
+                                    <select id="difficulty-select" class="flex h-10 w-full items-center justify-between rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50">
                                         <option value="easy">Fácil</option>
                                         <option value="medium">Médio</option>
                                         <option value="hard">Difícil</option>
@@ -324,10 +324,10 @@
     
                         <div class="absolute top-4 right-4 z-50 flex flex-col gap-2">
                             <button onclick="MapControls.zoomIn()" class="bg-black/70 text-white p-2 rounded-full border border-white/20 hover:bg-primary transition-colors">
-                                <i data-lucide="plus" class="w-10 h-10"></i>
+                                <i data-lucide="plus" class="w-6 h-6"></i>
                             </button>
                             <button onclick="MapControls.zoomOut()" class="bg-black/70 text-white p-2 rounded-full border border-white/20 hover:bg-primary transition-colors">
-                                <i data-lucide="minus" class="w-10 h-10"></i>
+                                <i data-lucide="minus" class="w-6 h-6"></i>
                             </button>
                         </div>
 
