@@ -1,72 +1,230 @@
 :root {
-            --background: 220 40% 10%; /* Deeper Navy */
-            --foreground: 215 20% 90%;
-            
-            --card: 220 30% 15%;
-            --card-foreground: 215 20% 90%;
-            
-            --popover: 220 40% 8%;
-            --popover-foreground: 215 20% 90%;
-            
-            --primary: 210 100% 60%; /* Vibrant Blue */
-            --primary-foreground: 210 100% 10%;
-            
-            --secondary: 220 20% 20%;
-            --secondary-foreground: 210 40% 98%;
-            
-            --muted: 220 15% 25%;
-            --muted-foreground: 215 15% 65%;
-            
-            --accent: 45 90% 55%; /* Gold */
-            --accent-foreground: 45 100% 10%;
+    --background: 220 40% 10%; /* Deeper Navy */
+    --foreground: 215 20% 90%;
+    
+    --card: 220 30% 15%;
+    --card-foreground: 215 20% 90%;
+    
+    --popover: 220 40% 8%;
+    --popover-foreground: 215 20% 90%;
+    
+    --primary: 210 100% 60%; /* Vibrant Blue */
+    --primary-foreground: 210 100% 10%;
+    
+    --secondary: 220 20% 20%;
+    --secondary-foreground: 210 40% 98%;
+    
+    --muted: 220 15% 25%;
+    --muted-foreground: 215 15% 65%;
+    
+    --accent: 45 90% 55%; /* Gold */
+    --accent-foreground: 45 100% 10%;
 
-            --destructive: 0 70% 55%;
-            --destructive-foreground: 0 0% 100%;
-            
-            --border: 220 30% 25%;
-            --input: 220 30% 25%;
-            --ring: 210 100% 70%;
-            
-            --radius: 0.5rem;
-        }
+    --destructive: 0 70% 55%;
+    --destructive-foreground: 0 0% 100%;
+    
+    --border: 220 30% 25%;
+    --input: 220 30% 25%;
+    --ring: 210 100% 70%;
+    
+    --radius: 0.5rem;
+}
 
-        /* Estilos para quando encontrar um chefe */
-        .boss-battle {
-            --background: 0 100% 8%; /* Deep, dark red */
-            --primary: 0 70% 55%; /* Agressive Red */
-            --accent: 25 95% 55%; /* Intense Orange */
-            --ring: 0 70% 65%;
-        }
+/* Estilos para quando encontrar um chefe */
+.boss-battle {
+    --background: 0 100% 8%; /* Deep, dark red */
+    --primary: 0 70% 55%; /* Agressive Red */
+    --accent: 25 95% 55%; /* Intense Orange */
+    --ring: 0 70% 65%;
+}
 
-        body {
-            background-color: hsl(var(--background));
-            color: hsl(var(--foreground));
-        }
+body {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+}
 
-        /* Custom Scrollbar for inner areas */
-        ::-webkit-scrollbar {
-            width: 6px;
-        }
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: hsl(var(--muted));
-            border-radius: 3px;
-        }
+/* Custom Scrollbar for inner areas */
+::-webkit-scrollbar {
+    width: 6px;
+}
+::-webkit-scrollbar-track {
+    background: transparent;
+}
+::-webkit-scrollbar-thumb {
+    background: hsl(var(--muted));
+    border-radius: 3px;
+}
 
-        /* Tab Animations */
-        .tab-content {
-            display: none;
-            animation: fadeIn 0.3s ease-in-out;
-        }
-        .tab-content.active {
-            display: flex;
-            flex-direction: column;
-            height: 100%;
-        }
+/* Tab Animations */
+.tab-content {
+    display: none;
+    animation: fadeIn 0.3s ease-in-out;
+}
+.tab-content.active {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
 
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+/* --- Overlay e Container do Card --- */
+.player-card-overlay {
+    position: fixed;
+    top: 0; left: 0;
+    width: 100vw; height: 100vh;
+    background: rgba(0, 0, 0, 0.7); /* Um pouco mais escuro para destacar as fotos */
+    backdrop-filter: blur(5px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 9999; /* Z-index alto para garantir que fique por cima de tudo */
+    opacity: 0;
+    animation: fadeIn 0.3s forwards;
+}
+
+.player-card {
+    position: relative;
+    width: 340px; /* Um pouco mais largo */
+    background: #1a1a1a;
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 20px 40px rgba(0,0,0,0.6);
+    transform: scale(0.9);
+    animation: popIn 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    border: 1px solid rgba(255,255,255,0.15);
+    color: #fff;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* --- Cabeçalho do Card (Role e Imagem) --- */
+.card-header {
+    padding: 30px 20px 20px; /* Mais espaço no topo */
+    text-align: center;
+    position: relative;
+    /* O background gradiente será aplicado aqui pelas classes de tema */
+}
+
+/* Container da imagem - Faz o recorte redondo */
+.role-icon-container {
+    width: 100px; /* Imagem maior */
+    height: 100px;
+    margin: 0 auto 15px;
+    border-radius: 50%;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+    overflow: hidden; /* Essencial para cortar a imagem em círculo */
+    background: #000; /* Fundo caso a imagem demore a carregar */
+    border: 4px solid transparent; /* Espaço para a borda colorida do tema */
+}
+
+/* A imagem em si */
+.role-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Garante que a imagem preencha o círculo sem distorcer */
+    display: block;
+}
+
+.role-title {
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    font-weight: 800;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    margin-bottom: 5px;
+}
+
+/* --- Corpo do Card --- */
+.card-body {
+    padding: 25px;
+    background: #222;
+    border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+.player-nickname {
+    font-size: 1.8rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 25px;
+    color: #fff;
+    letter-spacing: 1px;
+}
+
+.stat-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255,255,255,0.07);
+    padding: 15px;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    transition: background 0.2s;
+}
+.stat-row:hover { background: rgba(255,255,255,0.1); }
+
+.stat-label {
+    font-size: 0.95rem;
+    color: #bbb;
+    font-weight: 600;
+    text-transform: uppercase;
+}
+
+.stat-value {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #fff;
+}
+
+.capital-value {
+    color: #4ade80;
+    text-shadow: 0 0 10px rgba(74, 222, 128, 0.3);
+}
+
+/* --- Botão Fechar --- */
+.close-card-btn {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    background: rgba(0,0,0,0.3);
+    width: 30px; height: 30px;
+    border-radius: 50%;
+    border: none;
+    color: rgba(255,255,255,0.8);
+    cursor: pointer;
+    font-size: 1rem;
+    display: flex; align-items: center; justify-content: center;
+    transition: all 0.2s;
+    z-index: 10;
+}
+.close-card-btn:hover { background: rgba(0,0,0,0.6); color: #fff; transform: rotate(90deg); }
+
+/* --- Temas Específicos por Role (Cores e Bordas) --- */
+/* Ministro: Azul/Dourado - Cardeal Richelieu */
+.theme-ministro .card-header { background: linear-gradient(135deg, #1e3a8a, #3b82f6); }
+.theme-ministro .role-icon-container { border-color: #fbbf24; }
+
+/* General: Verde Militar/Vermelho - Napoleão Bonaparte */
+.theme-general .card-header { background: linear-gradient(135deg, #3f4c3b, #711818); }
+.theme-general .role-icon-container { border-color: #ef4444; }
+
+/* Opositor: Vermelho/Preto - Guy Fawkes */
+.theme-opositor .card-header { background: linear-gradient(135deg, #4a0404, #991b1b); }
+.theme-opositor .role-icon-container { border-color: #000; box-shadow: 0 0 15px rgba(255,0,0,0.5); }
+
+/* Empresário: Dourado/Verde - John D. Rockefeller */
+.theme-empresario .card-header { background: linear-gradient(135deg, #78350f, #d97706); }
+.theme-empresario .role-icon-container { border-color: #10b981; }
+
+/* Jornalista: Ciano/Papel - Joseph Pulitzer */
+.theme-jornalista .card-header { background: linear-gradient(135deg, #0e7490, #0ea5e9); }
+.theme-jornalista .role-icon-container { border-color: #cffafe; }
+
+/* Oportunista: Roxo/Neon - Maquiavel */
+.theme-oportunista .card-header { background: linear-gradient(135deg, #4c1d95, #8b5cf6); }
+.theme-oportunista .role-icon-container { border-color: #f0abfc; box-shadow: 0 0 15px rgba(240, 171, 252, 0.5); }
+
+/* --- Animações --- */
+@keyframes fadeIn { to { opacity: 1; } }
+@keyframes popIn { to { transform: scale(1); } }
