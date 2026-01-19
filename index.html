@@ -22,6 +22,7 @@
     <script src="scripts/tailwind.js"></script>
     <script src="scripts/acoesJogo.js"></script>
 
+
     <style>
         /* Custom styles to match original feeling */
         .boss-battle #bg-layer { filter: sepia(100%) hue-rotate(-50deg) saturate(200%); }
@@ -376,10 +377,16 @@
 
                 // 1. Header Players
                 const headerPlayers = document.getElementById('header-players');
-                if(headerPlayers) {
+                
+                if (headerPlayers) {
                     headerPlayers.innerHTML = players.map((p, idx) => `
-                        <div class="relative h-8 w-8 rounded-full border-2 ${idx === current_player_index ? 'border-primary z-10 scale-110' : 'border-background bg-muted'} flex items-center justify-center text-xs font-bold text-foreground bg-secondary" title="${p.nickname}">
-                            ${p.nickname.charAt(0)}
+                        <div 
+                            onclick="showPlayerDetails(${idx})" 
+                            class="cursor-pointer relative h-8 w-8 rounded-full border-2 ${idx === current_player_index ? 'border-primary z-10 scale-110' : 'border-background bg-muted'} flex items-center justify-center text-xs font-bold text-foreground bg-secondary transition-transform hover:scale-125" 
+                            title="${p.nickname}" 
+                        >
+                            ${p.nickname.charAt(0).toUpperCase()}
+                            
                             ${idx === current_player_index ? '<span class="absolute -top-1 -right-1 h-3 w-3 bg-primary rounded-full animate-ping"></span>' : ''}
                         </div>
                     `).join('');
@@ -630,5 +637,7 @@
         Game.init();
 
     </script>
+
+    <script src="scripts/playersClases.js"></script>
 </body>
 </html>
