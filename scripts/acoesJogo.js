@@ -130,7 +130,8 @@ const Game = {
                 board_position: data.board_position,
                 current_player_index: data.current_player_index,
                 game_over_message: data.game_over_message,
-                creator_uid: data.creator_user_uid
+                creator_uid: data.creator_user_uid,
+                education_history: data.education_history
             };
 
             
@@ -143,6 +144,7 @@ const Game = {
                 State.ui.view = 'game';
                 Renderer.renderGame();
             } else if (State.serverData.status === 'finished') {
+                if (State.pollingInterval) clearInterval(State.pollingInterval);
                 Renderer.showEndGame(State.serverData.game_over_message);
             } else if (State.serverData.status === 'waiting' && State.ui.view === 'lobby') {
                 // Se por acaso caiu aqui sem passar pelo create/join manual
@@ -187,6 +189,7 @@ const Game = {
             });
             document.getElementById('end-game-dialog').classList.add('hidden');
             document.getElementById('end-game-dialog').classList.remove('flex');
+            Game.startPolling();
         } catch (e) {}
     },
 
