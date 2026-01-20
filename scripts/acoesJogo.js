@@ -88,7 +88,7 @@ const Game = {
     },
 
     startGame: async () => {
-        if (State.serverData.players.length > 3){
+        if (State.serverData.players.length > 0){
         try {
             await API.request('/game/start', 'POST', { gameCode: State.gameCode });
             // Polling vai pegar a mudança de status e renderizar o jogo
