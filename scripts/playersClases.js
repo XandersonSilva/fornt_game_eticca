@@ -13,7 +13,7 @@ function showPlayerDetails(indice) {
             accentColor: 'text-amber-400',
             
             // Representação: Cardeal Richelieu
-            imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Champaigne_portret_van_kardinaal_Richelieu.jpg/300px-Champaigne_portret_van_kardinaal_Richelieu.jpg',
+            imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/Richelieu%2C_por_Philippe_de_Champaigne_(detalle).jpg/640px-Richelieu%2C_por_Philippe_de_Champaigne_(detalle).jpg',
         },
         'General': {
             // Verde Militar e Vermelho Sangue
@@ -22,7 +22,7 @@ function showPlayerDetails(indice) {
             accentColor: 'text-red-500',
             
             // Representação: Napoleão Bonaparte
-            imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/Jacques-Louis_David_-_The_Emperor_Napoleon_in_His_Study_-_Google_Art_Project.jpg/300px-Jacques-Louis_David_-_The_Emperor_Napoleon_in_His_Study_-_Google_Art_Project.jpg',
+            imageUrl: 'https://aventurasnahistoria.com.br/wp-content/uploads/personagem/napoelddnnd.jpg',
         },
         'Opositor': {
             // Vermelho Escuro Revolucionário e Preto
@@ -31,7 +31,7 @@ function showPlayerDetails(indice) {
             accentColor: 'text-red-500',
             
             // Representação: Guy Fawkes
-            imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/94/Guy_Fawkes_by_Cruikshank.jpg/300px-Guy_Fawkes_by_Cruikshank.jpg',
+            imageUrl: 'https://media.wsimag.com/attachments/97e42a0d539c4dee0ce9af4232e9125e69728244/store/fill/1860/1395/d9259c65dbfc312ed64999ecc24e40bbf09e9ddb8af0c7895b17bfb08305/Recreacion-del-personaje-de-Guy-Fawkes.jpg',
         },
         'Empresário': {
             // Dourado Luxuoso e Verde Esmeralda
@@ -40,7 +40,7 @@ function showPlayerDetails(indice) {
             accentColor: 'text-emerald-400',
             
             // Representação: John D. Rockefeller
-            imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6f/John_D._Rockefeller_1885.jpg/300px-John_D._Rockefeller_1885.jpg',
+            imageUrl: 'https://imgcdn.stablediffusionweb.com/2024/4/15/08c2008b-d719-43d5-b1b2-86c4a41f3b45.jpg',
         },
         'Jornalista': {
             // Ciano Moderno e Cinza Papel
@@ -49,7 +49,7 @@ function showPlayerDetails(indice) {
             accentColor: 'text-cyan-200',
             
             // Representação: Joseph Pulitzer
-            imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d5/Joseph_Pulitizer_%28ca._1905%29.jpg/300px-Joseph_Pulitizer_%28ca._1905%29.jpg',
+            imageUrl: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c4/Joseph_Pulitzer_AP.jpg/500px-Joseph_Pulitzer_AP.jpg',
         },
         'Oportunista': {
             // Roxo Neon e Misterioso
