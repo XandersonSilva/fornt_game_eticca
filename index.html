@@ -164,6 +164,17 @@
             setTimeout(() => toast.remove(), 4000);
         }
 
+        function copyGameCode() {
+            if (!State.gameCode) return;
+            
+            navigator.clipboard.writeText(State.gameCode).then(() => {
+                showToast("Sucesso", "Código copiado para a área de transferência!");
+            }).catch(err => {
+                console.error(err);
+                showToast("Erro", "Falha ao copiar código.", "destructive");
+            });
+        }
+
         // --- API SERVICE ---
         const API = {
             request: async (endpoint, method = 'GET', body = null) => {
@@ -251,15 +262,20 @@
                     <div class="flex min-h-screen flex-col items-center justify-center bg-background p-4">
                         <div class="w-full max-w-md bg-card border border-border rounded-lg shadow-xl p-6 text-center">
                             <h2 class="text-xl font-headline mb-2 text-muted-foreground">Sala de Espera</h2>
-                            <div class="text-4xl font-bold tracking-[0.5em] text-primary mb-6 bg-secondary/30 p-4 rounded border border-dashed border-primary/30">
-                                ${State.gameCode}
-                            </div>
+                            
+                            <button onclick="copyGameCode()" class="w-full group relative mb-6 bg-secondary/30 p-4 rounded border border-dashed border-primary/30 hover:bg-secondary/50 hover:border-primary transition-all cursor-pointer" title="Clique para copiar">
+                                <div class="text-4xl font-bold tracking-[0.5em] text-primary group-hover:scale-105 transition-transform">
+                                    ${State.gameCode}
+                                </div>
+                                <div class="absolute bottom-2 right-1/2 translate-x-1/2 text-[10px] text-muted-foreground flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                                    <i data-lucide="copy" class="w-3 h-3"></i> Clique para copiar
+                                </div>
+                            </button>
                             
                             <div class="mb-6">
                                 <h3 class="text-sm font-medium text-left mb-2 ml-1">Jogadores Conectados:</h3>
                                 <div id="player-list" class="space-y-2">
-                                    <!-- Player list injected here -->
-                                </div>
+                                    </div>
                             </div>
 
                             <div id="creator-controls" class="hidden">
@@ -310,7 +326,6 @@
                 const app = document.getElementById('app');
                 app.className = "flex flex-col min-h-screen bg-background";
                 app.innerHTML = `
-                    <!-- HEADER -->
                     <header class="bg-card/90 border-b border-border shadow-sm sticky top-0 z-20 backdrop-blur-md">
                         <div class="container mx-auto px-4 h-14 flex items-center justify-between">
                             <div class="flex items-center space-x-2">
@@ -318,11 +333,18 @@
                                 <h1 class="hidden sm:block text-lg font-bold font-headline">Brasil em Pauta</h1>
                             </div>
                             <div class="flex items-center gap-4">
-                                <div class="flex flex-col items-end">
-                                    <span class="text-[10px] text-muted-foreground">CÓDIGO</span>
-                                    <span class="text-sm font-bold tracking-widest text-primary leading-none">${State.gameCode}</span>
-                                </div>
+                                
+                                <button onclick="copyGameCode()" class="flex flex-col items-end group hover:bg-secondary/50 p-1 rounded transition-colors cursor-pointer" title="Copiar Código">
+                                    <span class="text-[10px] text-muted-foreground flex items-center gap-1">
+                                        CÓDIGO <i data-lucide="copy" class="w-3 h-3 opacity-0 group-hover:opacity-100 transition-opacity"></i>
+                                    </span>
+                                    <span class="text-sm font-bold tracking-widest text-primary leading-none group-hover:text-primary/80">
+                                        ${State.gameCode}
+                                    </span>
+                                </button>
+
                                 <div class="h-8 w-[1px] bg-border mx-2"></div>
+                                
                                 <div class="flex items-center gap-2">
                                      <span class="text-xs text-muted-foreground hidden sm:inline">Jogadores:</span>
                                      <div id="header-players" class="flex -space-x-2"></div>
@@ -331,15 +353,12 @@
                         </div>
                     </header>
 
-                    <!-- DESKTOP STATS -->
                     <div class="hidden md:block w-full bg-secondary/30 py-3 border-b border-border">
                         <div id="desktop-indicators" class="container mx-auto px-4 grid grid-cols-6 gap-6"></div>
                     </div>
 
-                    <!-- MAIN -->
                     <main class="flex-1 flex flex-col md:grid md:grid-cols-3 md:gap-6 md:p-6 min-h-0 overflow-hidden relative">
                         
-                        <!-- MAPA (Esquerda/Centro) -->
                         <div id="view-map" class="col-span-2 relative flex flex-col bg-black rounded-lg overflow-hidden border border-border/50 shadow-2xl touch-none cursor-move">
     
                         <div class="absolute top-4 right-4 z-50 flex flex-col gap-2">
@@ -358,17 +377,13 @@
                         </div>
                     </div>
 
-                        <!-- PAINEL (Direita) -->
                         <div class="col-span-1 flex flex-col h-full min-h-0 overflow-hidden relative bg-card md:rounded-lg md:border md:border-border">
-                             <!-- Mobile Content -->
                              <div class="md:hidden flex-1 overflow-y-auto p-4" id="mobile-content-area"></div>
                              
-                             <!-- Desktop Content -->
                              <div class="hidden md:flex flex-col h-full" id="desktop-decision-area"></div>
                         </div>
                     </main>
 
-                    <!-- MOBILE NAV -->
                     <nav class="md:hidden bg-card border-t border-border grid grid-cols-4 h-16 pb-safe">
                         <button onclick="Game.setTab('mapa')" class="nav-btn" data-tab="mapa">
                             <i data-lucide="map" class="h-5 w-5 mb-1"></i> Mapa
